@@ -184,8 +184,7 @@ export default function App() {
     { name: "Canva Pro",        src: "/tech-icons/canva.png"     },
     { name: "Capcut",           src: "/tech-icons/capcut.png"    },
     { name: "Meta Business",    src: "/tech-icons/meta.png"      },
-    // Example: If you upload a colored Google logo named "googleb.png" to your public/tech-icons folder, this will swap it!
-    { name: "Google Workspace", src: theme === "light" ? "/tech-icons/googleb.png" : "/tech-icons/googlew.png" },
+    { name: "Google Workspace", src: "/tech-icons/googlew.png" },
     { name: "Microsoft Office", src: "/tech-icons/microsoft.jpg" },
     { name: "Notion",           src: "/tech-icons/notion.png"    },
     { name: "Slack",            src: "/tech-icons/slack.jpg"     },
