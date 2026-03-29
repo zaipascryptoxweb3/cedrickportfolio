@@ -1,146 +1,272 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-  Menu, X, Mail, Phone, ChevronRight, PenTool, Layout,
-  MonitorSmartphone, CheckCircle2, Briefcase, Send, BarChart3,
-  Users, TrendingUp, Sun, Moon, Linkedin, Globe, Download,
+  Menu,
+  X,
+  Mail,
+  Phone,
+  ChevronRight,
+  PenTool,
+  Layout,
+  MonitorSmartphone,
+  CheckCircle2,
+  Briefcase,
+  Send,
+  BarChart3,
+  Users,
+  TrendingUp,
+  Sun,
+  Moon,
+  Linkedin,
+  Globe,
+  Download,
   Image as ImageIcon,
 } from "lucide-react";
 
-// ─── All images served from /public — zero build-time import errors ───────────
-
-const NAV_LINKS = ["Home", "About", "Services", "Portfolio", "Experience", "Contact"];
+const NAV_LINKS = [
+  { label: "Home", id: "home" },
+  { label: "About", id: "about" },
+  { label: "Services", id: "services" },
+  { label: "Portfolio", id: "portfolio" },
+  { label: "Experience", id: "experience" },
+  { label: "Contact", id: "contact" },
+];
 
 const SERVICES = [
   {
-    icon: <PenTool className="w-6 h-6" />,
+    icon: PenTool,
     title: "Brand & Graphic Design",
     description: "Transforming ideas into high-converting visual assets.",
-    items: ["Social Media Graphics", "Marketing Collateral", "Brand Visual Identity", "Event & Promo Posters"],
+    items: [
+      "Social Media Graphics",
+      "Marketing Collateral",
+      "Brand Visual Identity",
+      "Event & Promo Posters",
+    ],
   },
   {
-    icon: <Layout className="w-6 h-6" />,
+    icon: Layout,
     title: "Social Media Strategy",
     description: "Building engaged communities through consistent, data-driven content.",
-    items: ["Content Calendar Planning", "Post Scheduling", "Copy & Caption Writing", "Engagement Analytics"],
+    items: [
+      "Content Calendar Planning",
+      "Post Scheduling",
+      "Copy & Caption Writing",
+      "Engagement Analytics",
+    ],
   },
   {
-    icon: <MonitorSmartphone className="w-6 h-6" />,
+    icon: MonitorSmartphone,
     title: "Digital Marketing Support",
     description: "Streamlining your digital operations so you can focus on scaling.",
-    items: ["Video & Shorts Editing", "Email Management", "Market Research", "Customer Support Setup"],
+    items: [
+      "Video & Shorts Editing",
+      "Email Management",
+      "Market Research",
+      "Customer Support Setup",
+    ],
   },
 ];
 
 const PORTFOLIO = [
-  { title: "Francesca Cafe Branding",  category: "Brand Identity",       description: '"Brewing Soon" promotional campaign establishing core brand visuals.',                                  metric: "Successful launch with high local engagement",            image: "/projects/Francesca.jpg" },
-  { title: "Facebook DP Blast",        category: "Social Media Campaign", description: "Dynamic event posters designed for university student organizations.",                                  metric: "+40% increase in student participation",                  image: "/projects/mikha.jpg"     },
-  { title: "Conference Campaign",      category: "Corporate Marketing",   description: "Campaign posters for corporate events and professional conferences.",                                   metric: "Streamlined event registration process",                  image: "/projects/BCC.jpg"       },
-  { title: "BSBA DAYS 2024",           category: "Event Branding",        description: "BINI Inspired Design for BSBA Students.",                                                             metric: "Boosted campus-wide visibility",                          image: "/projects/BSBA.jpg"      },
-  { title: "Your Face Looks Familiar", category: "Event Design",          description: "Talent & Impersonation Showcase promotional assets.",                                                   metric: "Record-breaking event turnout",                           image: "/projects/Cma1.jpg"      },
-  { title: "Chick and Hunk 2024",      category: "Event Design",          description: "Highlighting the charm and stage presence of BSBA participants.",                                       metric: "High social media interaction",                           image: "/projects/CH.jpg"        },
-  { title: "SF Legends",               category: "Event Design",          description: "A bold social media campaign showcasing the elegant, floral-themed Rose Weapon Series.",                metric: "35% increase in direct-to-store purchases",               image: "/projects/sfl.jpg"       },
-  { title: "SF Legends 2",             category: "Event Design",          description: "Elegant promotional materials for the classic, ornate Porcelain series.",                               metric: "Drove a 25% increase in overall daily revenue",           image: "/projects/sfl2.jpg"      },
-  { title: "SF Legends 3",             category: "Event Design",          description: "Luxurious promotional assets for a collector-grade weapon with intricate metal scrollwork.",            metric: "Sold over 50,000 lotto spins within the first 48 hours", image: "/projects/sfl3.jpg"      },
+  {
+    title: "Francesca Cafe Branding",
+    category: "Brand Identity",
+    description: '"Brewing Soon" promotional campaign establishing core brand visuals.',
+    metric: "Successful launch with high local engagement",
+    image: "/projects/Francesca.jpg",
+  },
+  {
+    title: "Facebook DP Blast",
+    category: "Social Media Campaign",
+    description: "Dynamic event posters designed for university student organizations.",
+    metric: "+40% increase in student participation",
+    image: "/projects/mikha.jpg",
+  },
+  {
+    title: "Conference Campaign",
+    category: "Corporate Marketing",
+    description: "Campaign posters for corporate events and professional conferences.",
+    metric: "Streamlined event registration process",
+    image: "/projects/BCC.jpg",
+  },
+  {
+    title: "BSBA Days 2024",
+    category: "Event Branding",
+    description: "BINI-inspired design for BSBA students.",
+    metric: "Boosted campus-wide visibility",
+    image: "/projects/BSBA.jpg",
+  },
+  {
+    title: "Your Face Looks Familiar",
+    category: "Event Design",
+    description: "Talent and impersonation showcase promotional assets.",
+    metric: "Record-breaking event turnout",
+    image: "/projects/Cma1.jpg",
+  },
+  {
+    title: "Chick and Hunk 2024",
+    category: "Event Design",
+    description: "Highlighting the charm and stage presence of BSBA participants.",
+    metric: "High social media interaction",
+    image: "/projects/CH.jpg",
+  },
+  {
+    title: "SF Legends",
+    category: "Game Campaign",
+    description: "A bold social media campaign showcasing the floral-themed Rose Weapon Series.",
+    metric: "35% increase in direct-to-store purchases",
+    image: "/projects/sfl.jpg",
+  },
+  {
+    title: "SF Legends 2",
+    category: "Game Campaign",
+    description: "Elegant promotional materials for the classic ornate Porcelain series.",
+    metric: "25% increase in daily revenue",
+    image: "/projects/sfl2.jpg",
+  },
+  {
+    title: "SF Legends 3",
+    category: "Game Campaign",
+    description: "Luxurious promotional assets for a collector-grade weapon with intricate metal scrollwork.",
+    metric: "50,000+ lotto spins in 48 hours",
+    image: "/projects/sfl3.jpg",
+  },
 ];
 
 const GRAPHIC_DESIGNS = [
-  { title: "Overall Champion Poster", image: "/design/Champs.jpg",  metric: "High Engagement Visual"  },
-  { title: "JFINEX Poster",           image: "/design/JFINEX1.jpg", metric: "Event Promotion"          },
-  { title: "Streat Cafe Menu",        image: "/design/Streat.jpg",  metric: "Improved Ordering Speed"  },
+  { title: "Overall Champion Poster", image: "/design/Champs.jpg", metric: "High Engagement Visual" },
+  { title: "JFINEX Poster", image: "/design/JFINEX1.jpg", metric: "Event Promotion" },
+  { title: "Streat Cafe Menu", image: "/design/Streat.jpg", metric: "Improved Ordering Speed" },
 ];
 
 const SKILL_CATEGORIES = [
-  { name: "Design & Creative",    skills: ["Brand Identity", "Social Media Graphics", "UI/Layout Design", "Video Editing"]            },
-  { name: "Marketing & Strategy", skills: ["Content Calendars", "Community Management", "Copywriting", "Analytics Reporting"]         },
-  { name: "Business & Admin",     skills: ["Project Management", "Client Communication", "Financial Analysis", "Workflow Automation"] },
+  {
+    name: "Design & Creative",
+    skills: ["Brand Identity", "Social Media Graphics", "UI/Layout Design", "Video Editing"],
+  },
+  {
+    name: "Marketing & Strategy",
+    skills: ["Content Calendars", "Community Management", "Copywriting", "Analytics Reporting"],
+  },
+  {
+    name: "Business & Admin",
+    skills: ["Project Management", "Client Communication", "Financial Analysis", "Workflow Automation"],
+  },
 ];
 
-// ─── SafeImg: shows a coloured initial if the image fails to load ─────────────
-const SafeImg = ({ src, alt, className }) => {
+function SafeImg({ src, alt, className }) {
   const [errored, setErrored] = useState(false);
+
   if (errored) {
     return (
       <div
         className={className}
         style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          background: "rgba(14,165,233,0.15)", color: "#0EA5E9",
-          fontWeight: 700, fontSize: 11, userSelect: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(14,165,233,0.15)",
+          color: "#0EA5E9",
+          fontWeight: 700,
+          fontSize: 11,
+          userSelect: "none",
         }}
       >
         {alt?.[0] ?? "?"}
       </div>
     );
   }
-  return <img src={src} alt={alt} className={className} onError={() => setErrored(true)} />;
-};
 
-// ─── Navbar ──────────────────────────────────────────────────────────────────
-const Navbar = ({ theme, setTheme }) => {
-  const [isScrolled,     setIsScrolled]     = useState(false);
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={() => setErrored(true)}
+    />
+  );
+}
+
+function Navbar({ theme, toggleTheme }) {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handle = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handle);
-    return () => window.removeEventListener("scroll", handle);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id) => {
-    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     setMobileMenuOpen(false);
   };
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)] py-4"
           : "bg-transparent py-6"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
-        <div
+        <button
+          type="button"
           className="text-2xl font-serif font-bold text-[var(--text-primary)] cursor-pointer"
-          onClick={() => scrollTo("home")}
+          onClick={() => scrollToSection("home")}
         >
           Cedrick<span className="text-[var(--primary-blue)]">.</span>
-        </div>
+        </button>
 
-        {/* Desktop */}
         <div className="hidden md:flex space-x-8 items-center">
           {NAV_LINKS.map((link) => (
             <button
-              key={link}
-              onClick={() => scrollTo(link)}
+              key={link.id}
+              type="button"
+              onClick={() => scrollToSection(link.id)}
               className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--primary-blue)] transition-colors"
             >
-              {link}
+              {link.label}
             </button>
           ))}
+
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            type="button"
+            onClick={toggleTheme}
             className="p-2 text-[var(--text-secondary)] hover:text-[var(--primary-blue)] transition-colors rounded-full hover:bg-[var(--bg-tertiary)]"
+            aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
+
           <button
-            onClick={() => scrollTo("contact")}
+            type="button"
+            onClick={() => scrollToSection("contact")}
             className="px-5 py-2.5 bg-[var(--primary-blue)] text-white text-sm font-bold rounded-full hover:bg-[var(--primary-blue-dark)] transition-all shadow-lg"
           >
             Hire Me
           </button>
         </div>
 
-        {/* Mobile */}
         <div className="md:hidden flex items-center gap-4">
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            type="button"
+            onClick={toggleTheme}
             className="p-2 text-[var(--text-secondary)]"
+            aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button className="text-[var(--text-primary)]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button
+            type="button"
+            className="text-[var(--text-primary)]"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -150,76 +276,123 @@ const Navbar = ({ theme, setTheme }) => {
         <div className="md:hidden absolute top-full left-0 w-full bg-[var(--bg-secondary)] shadow-lg border-t border-[var(--border-color)] py-4 flex flex-col px-6 space-y-4">
           {NAV_LINKS.map((link) => (
             <button
-              key={link}
-              onClick={() => scrollTo(link)}
+              key={link.id}
+              type="button"
+              onClick={() => scrollToSection(link.id)}
               className="text-left text-lg font-medium text-[var(--text-secondary)] hover:text-[var(--primary-blue)]"
             >
-              {link}
+              {link.label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => scrollToSection("contact")}
+            className="mt-2 px-5 py-3 bg-[var(--primary-blue)] text-white text-sm font-bold rounded-full hover:bg-[var(--primary-blue-dark)] transition-all"
+          >
+            Hire Me
+          </button>
         </div>
       )}
     </nav>
   );
-};
+}
 
-// ─── App ─────────────────────────────────────────────────────────────────────
 export default function App() {
-  const [formStatus,    setFormStatus]    = useState(null);
-  const [theme,         setTheme]         = useState("dark");
+  const [formStatus, setFormStatus] = useState(null);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    return localStorage.getItem("portfolio-theme") || "dark";
+  });
   const [selectedImage, setSelectedImage] = useState(null);
-
-  // ─── DYNAMIC LOGOS (Switches based on Theme) ──────────────
-  const dynamicLogos = [
-    { src: theme === "light" ? "/logo/francescab.png" : "/logo/francesca.png", alt: "Francesca Cafe Logo", label: "Francesca Cafe" },
-    { src: "/logo/streatc.png",   alt: "Streat Cafe Logo",    label: "Streat Cafe"    },
-    { src: theme === "light" ? "/logo/mythb.png" : "/logo/mythw.png",     alt: "Myth Games Logo",     label: "Myth Games"     },
-    { src: "/logo/sflegends.png", alt: "SF Legends Logo",     label: "SF Legends"     },
-    { src: "/logo/jfinex.png",    alt: "JFINEX Logo",         label: "JFINEX PAU"     },
-  ];
-
-  // ─── DYNAMIC TOOLS (Switches based on Theme) ──────────────
-  const dynamicTools = [
-    { name: "Adobe Photoshop",  src: "/tech-icons/photoshop.png" },
-    { name: "Canva Pro",        src: "/tech-icons/canva.png"     },
-    { name: "Capcut",           src: "/tech-icons/capcut.png"    },
-    { name: "Meta Business",    src: "/tech-icons/meta.png"      },
-    { name: "Google Workspace", src: "/tech-icons/googlew.png" },
-    { name: "Microsoft Office", src: "/tech-icons/microsoft.jpg" },
-    { name: "Notion",           src: "/tech-icons/notion.png"    },
-    { name: "Slack",            src: "/tech-icons/slack.jpg"     },
-    { name: "n8n (Automation)", src: "/tech-icons/n8n.png"       },
-    { name: "ChatGPT / AI",     src: "/tech-icons/chatgpt.png"   },
-    { name: "Gemini",           src: "/tech-icons/gemini.png"    },
-    { name: "Claude",           src: "/tech-icons/claude.png"    },
-    { name: "Grammarly",        src: "/tech-icons/gram.png"      },
-    { name: "Hostinger",        src: "/tech-icons/htgr.png"      },
-    { name: "Visual Studio",    src: "/tech-icons/vsss.png"      },
-  ];
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    service: "Graphic Design",
+    details: "",
+  });
 
   useEffect(() => {
-    const handle = (e) => { if (e.key === "Escape") setSelectedImage(null); };
-    window.addEventListener("keydown", handle);
-    return () => window.removeEventListener("keydown", handle);
+    localStorage.setItem("portfolio-theme", theme);
+  }, [theme]);
+
+  const dynamicLogos = useMemo(
+    () => [
+      {
+        src: theme === "light" ? "/logo/francescab.png" : "/logo/francesca.png",
+        alt: "Francesca Cafe Logo",
+        label: "Francesca Cafe",
+      },
+      { src: "/logo/streatc.png", alt: "Streat Cafe Logo", label: "Streat Cafe" },
+      {
+        src: theme === "light" ? "/logo/mythb.png" : "/logo/mythw.png",
+        alt: "Myth Games Logo",
+        label: "Myth Games",
+      },
+      { src: "/logo/sflegends.png", alt: "SF Legends Logo", label: "SF Legends" },
+      { src: "/logo/jfinex.png", alt: "JFINEX Logo", label: "JFINEX PAU" },
+    ],
+    [theme]
+  );
+
+  const dynamicTools = useMemo(
+    () => [
+      { name: "Adobe Photoshop", src: "/tech-icons/photoshop.png" },
+      { name: "Canva Pro", src: "/tech-icons/canva.png" },
+      { name: "CapCut", src: "/tech-icons/capcut.png" },
+      { name: "Meta Business", src: "/tech-icons/meta.png" },
+      { name: "Google Workspace", src: "/tech-icons/googlew.png" },
+      { name: "Microsoft Office", src: "/tech-icons/microsoft.jpg" },
+      { name: "Notion", src: "/tech-icons/notion.png" },
+      { name: "Slack", src: "/tech-icons/slack.jpg" },
+      { name: "n8n (Automation)", src: "/tech-icons/n8n.png" },
+      { name: "ChatGPT / AI", src: "/tech-icons/chatgpt.png" },
+      { name: "Gemini", src: "/tech-icons/gemini.png" },
+      { name: "Claude", src: "/tech-icons/claude.png" },
+      { name: "Grammarly", src: "/tech-icons/gram.png" },
+      { name: "Hostinger", src: "/tech-icons/htgr.png" },
+      { name: "Visual Studio", src: "/tech-icons/vsss.png" },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, []);
 
   useEffect(() => {
     document.body.style.overflow = selectedImage ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [selectedImage]);
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
     setFormStatus("success");
     setTimeout(() => setFormStatus(null), 3000);
-    e.target.reset();
+    setFormData({
+      name: "",
+      email: "",
+      service: "Graphic Design",
+      details: "",
+    });
   };
 
   const openImage = (src, alt) => setSelectedImage({ src, alt });
+  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   const themeStyles = `
     .theme-wrapper {
-      --primary-blue: #0EA5E9;
+      --primary-blue: #0ea5e9;
       --primary-blue-dark: #0284c7;
       --bg-primary: #0a0e1a;
       --bg-secondary: #111827;
@@ -249,6 +422,9 @@ export default function App() {
       --gradient-end: #f8fafc;
       --card-hover-shadow: rgba(2,132,199,0.12);
     }
+    .hover-card {
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
     .hover-card:hover {
       box-shadow: 0 10px 30px -5px var(--card-hover-shadow), 0 8px 10px -6px var(--card-hover-shadow);
       transform: translateY(-4px);
@@ -261,9 +437,8 @@ export default function App() {
       data-theme={theme}
     >
       <style>{themeStyles}</style>
-      <Navbar theme={theme} setTheme={setTheme} />
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
 
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section
         id="home"
         className="pt-32 pb-16 md:pt-48 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20"
@@ -284,12 +459,13 @@ export default function App() {
           </h1>
 
           <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto md:mx-0 leading-relaxed">
-            I am a multifaceted Virtual Assistant specialising in Graphic Design and Social Media Management. I help
-            businesses scale by taking creative and digital operations off their plate.
+            I’m Cedrick, a graphic designer and social media marketer helping businesses, gaming communities,
+            and personal brands create visuals that connect with audiences and support real growth.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
             <button
+              type="button"
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
               className="w-full sm:w-auto px-8 py-3.5 bg-[var(--primary-blue)] text-white font-bold rounded-full hover:bg-[var(--primary-blue-dark)] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-blue)]/20"
             >
@@ -328,7 +504,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── Trusted By ────────────────────────────────────────────────────── */}
       <div className="border-y border-[var(--border-color)] bg-[var(--bg-primary)] py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
@@ -348,7 +523,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── About ─────────────────────────────────────────────────────────── */}
       <section id="about" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -358,16 +532,19 @@ export default function App() {
                 <span className="text-[var(--primary-blue)]">Business.</span>
               </h2>
               <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
-                Unlike traditional designers, my background in Financial Management gives me a unique perspective. I
-                don&apos;t just make things look pretty—I design with a business objective in mind.
+                My background in Financial Management gives me a practical edge. I don’t just make things look good —
+                I design with business goals, audience attention, and conversion in mind.
               </p>
               <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-                Whether you need a brand overhaul, a content calendar that actually converts, or an organised virtual
-                assistant to manage the creative chaos, I bring efficiency and aesthetic excellence to your team.
+                Whether you need a brand refresh, social content that performs, or dependable creative support, I bring
+                structure, speed, and visual consistency to every project.
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap sm:flex-nowrap">
                 {[["4+", "Years Experience"], ["50+", "Projects Delivered"]].map(([num, label]) => (
-                  <div key={label} className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex-1 text-center">
+                  <div
+                    key={label}
+                    className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex-1 text-center min-w-[150px]"
+                  >
                     <p className="text-3xl font-bold text-[var(--primary-blue)] mb-1">{num}</p>
                     <p className="text-xs font-medium text-[var(--text-secondary)] uppercase">{label}</p>
                   </div>
@@ -376,68 +553,84 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300">
+              <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
                 <PenTool className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
                 <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Visual Design</h3>
-                <p className="text-[var(--text-secondary)] text-sm">Award-winning layouts, branding, and marketing collateral.</p>
+                <p className="text-[var(--text-secondary)] text-sm">
+                  Clean layouts, strong branding, and polished marketing materials tailored to your audience.
+                </p>
               </div>
               <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
                 <BarChart3 className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
                 <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">ROI Focused</h3>
-                <p className="text-[var(--text-secondary)] text-sm">Every post and design is crafted to drive engagement and sales.</p>
+                <p className="text-[var(--text-secondary)] text-sm">
+                  Every design choice supports visibility, engagement, and business growth.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Services ──────────────────────────────────────────────────────── */}
       <section id="services" className="py-20 md:py-32 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">How I can help you</h2>
-            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">Comprehensive digital support tailored to scale your brand efficiently.</p>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
+              Comprehensive digital support tailored to scale your brand efficiently.
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {SERVICES.map((service, index) => (
-              <div key={index} className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card transition-all duration-300 flex flex-col">
-                <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
-                  {service.icon}
+            {SERVICES.map((service) => {
+              const Icon = service.icon;
+              return (
+                <div
+                  key={service.title}
+                  className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col"
+                >
+                  <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
+                  <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
+                  <ul className="mt-auto space-y-3">
+                    {service.items.map((item) => (
+                      <li key={item} className="flex items-start text-[var(--text-secondary)]">
+                        <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
+                        <span className="text-sm font-medium">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
-                <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
-                <ul className="mt-auto space-y-3">
-                  {service.items.map((item, i) => (
-                    <li key={i} className="flex items-start text-[var(--text-secondary)]">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
-                      <span className="text-sm font-medium">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── Portfolio ─────────────────────────────────────────────────────── */}
       <section id="portfolio" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="mb-12">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Selected Work</h2>
-            <p className="text-[var(--text-secondary)] max-w-xl text-lg">A showcase of visual solutions designed to capture attention and deliver results.</p>
+            <p className="text-[var(--text-secondary)] max-w-xl text-lg">
+              A showcase of visual solutions designed to capture attention and deliver results.
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PORTFOLIO.map((item, index) => (
+            {PORTFOLIO.map((item) => (
               <button
-                key={index}
+                key={item.title}
                 type="button"
                 onClick={() => openImage(item.image, item.title)}
-                className="group flex flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card transition-all duration-300 cursor-zoom-in text-left"
+                className="group flex flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
                 aria-label={`View full image of ${item.title}`}
               >
                 <div className="aspect-[4/3] overflow-hidden relative">
-                  <SafeImg src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <SafeImg
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
                     <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
                   </div>
@@ -448,7 +641,9 @@ export default function App() {
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">{item.title}</h3>
+                  <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                    {item.title}
+                  </h3>
                   <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
                   <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
                     <TrendingUp className="w-4 h-4 text-green-500" />
@@ -461,7 +656,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── Portrait Design ───────────────────────────────────────────────── */}
       <section id="graphic-design" className="py-20 md:py-32 bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16">
@@ -469,16 +663,20 @@ export default function App() {
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">High-impact vertical layouts and event posters.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {GRAPHIC_DESIGNS.map((item, index) => (
+            {GRAPHIC_DESIGNS.map((item) => (
               <button
-                key={index}
+                key={item.title}
                 type="button"
                 onClick={() => openImage(item.image, item.title)}
-                className="group relative rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card transition-all duration-300 cursor-zoom-in text-left"
+                className="group relative rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
                 aria-label={`View full image of ${item.title}`}
               >
                 <div className="aspect-[1/1.414] overflow-hidden relative">
-                  <SafeImg src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <SafeImg
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                     <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2">{item.title}</h3>
                     <div className="flex items-center gap-2">
@@ -498,7 +696,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── Experience ────────────────────────────────────────────────────── */}
       <section id="experience" className="py-20 md:py-32 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div>
@@ -506,26 +703,28 @@ export default function App() {
               <Briefcase className="text-[var(--primary-blue)]" /> Professional Journey
             </h2>
             <div className="space-y-10 mb-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[var(--primary-blue)] before:to-transparent">
-              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--primary-blue)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md" />
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] hover-card transition-all">
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] hover-card">
                   <div className="text-[var(--primary-blue)] font-bold text-sm mb-1 uppercase tracking-wider">2021 – Present</div>
                   <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Freelance Graphic Designer &amp; SMM</h3>
                   <div className="text-[var(--text-secondary)] text-sm space-y-2 mt-3">
-                    <p>• Engineered brand identities and campaigns for clients like Francesca Cafe &amp; Streat Cafe.</p>
-                    <p>• Managed end-to-end design deliverables, maintaining a 100% on-time delivery rate.</p>
-                    <p>• Acted as primary client liaison, translating abstract ideas into concrete visual strategies.</p>
+                    <p>• Built brand identities and campaigns for cafés, student organizations, and gaming communities.</p>
+                    <p>• Managed end-to-end design deliverables with consistent turnaround and client communication.</p>
+                    <p>• Turned abstract client ideas into clear visuals and practical content strategies.</p>
                   </div>
                 </div>
               </div>
 
-              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--text-tertiary)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2" />
                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-tertiary)] p-6 rounded-2xl border border-[var(--border-color)]">
                   <div className="text-[var(--text-tertiary)] font-bold text-sm mb-1 uppercase tracking-wider">June – Oct 2021</div>
                   <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Layout Artist</h3>
                   <p className="text-[var(--text-primary)] font-medium text-sm mb-2">One Stop Shop</p>
-                  <p className="text-[var(--text-secondary)] text-sm">Prepared commercial print files and optimised layout workflows, ensuring zero-defect production runs.</p>
+                  <p className="text-[var(--text-secondary)] text-sm">
+                    Prepared commercial print files and improved layout workflows for smooth production output.
+                  </p>
                 </div>
               </div>
             </div>
@@ -534,24 +733,26 @@ export default function App() {
               <Users className="text-[var(--primary-blue)]" /> Education
             </h2>
             <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)]">
-              <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Expected Grad: June 2026</span>
+              <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Expected Graduation: June 2026</span>
               <h3 className="text-xl font-bold mt-2 text-[var(--text-primary)]">BS in Business Administration</h3>
-              <p className="text-[var(--text-secondary)] font-medium mb-2">PHINMA Araullo University — Major in Financial Management</p>
+              <p className="text-[var(--text-secondary)] font-medium mb-2">
+                PHINMA Araullo University — Major in Financial Management
+              </p>
             </div>
           </div>
 
           <div>
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)]">Value Proposition</h2>
             <div className="space-y-8 mb-12">
-              {SKILL_CATEGORIES.map((category, idx) => (
-                <div key={idx}>
+              {SKILL_CATEGORIES.map((category) => (
+                <div key={category.name}>
                   <h3 className="text-sm font-bold mb-4 uppercase tracking-wider text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
                     {category.name}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill, i) => (
+                    {category.skills.map((skill) => (
                       <span
-                        key={i}
+                        key={skill}
                         className="px-4 py-2 bg-[var(--primary-blue)]/5 border border-[var(--primary-blue)]/20 rounded-lg text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--primary-blue)]/10 transition-colors"
                       >
                         {skill}
@@ -567,9 +768,9 @@ export default function App() {
                 Tech Stack &amp; Tools
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {dynamicTools.map((tool, index) => (
+                {dynamicTools.map((tool) => (
                   <div
-                    key={index}
+                    key={tool.name}
                     className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl hover:border-[var(--primary-blue)]/50 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-[var(--bg-tertiary)] shrink-0">
@@ -584,34 +785,41 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── Contact ───────────────────────────────────────────────────────── */}
       <section id="contact" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
-          
-          {/* Left Side (Updated for Light/Dark Mode compatibility) */}
           <div
             className="flex-1 p-10 md:p-16 flex flex-col justify-between relative overflow-hidden"
             style={{ background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))" }}
           >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary-blue)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            
+
             <div className="relative z-10">
               <span className="inline-block py-1 px-3 rounded-full bg-[var(--primary-blue)]/10 border border-[var(--primary-blue)]/20 text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider mb-6">
                 Currently Accepting Projects
               </span>
-              
+
               <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
                 Let&apos;s build something great.
               </h2>
-              
+
               <p className="text-[var(--text-secondary)] mb-12 text-lg">
-                Whether you need a full rebrand, social media management, or a reliable VA, I&apos;m ready to help you scale.
+                Whether you need a full rebrand, social media management, or reliable creative support, I’m ready to help you scale.
               </p>
-              
+
               <div className="space-y-8">
                 {[
-                  { icon: <Mail className="w-6 h-6" />,  label: "Drop me an email",  value: "nuestrocedrick@gmail.com", href: "mailto:nuestrocedrick@gmail.com" },
-                  { icon: <Phone className="w-6 h-6" />, label: "Call or WhatsApp",  value: "+63 965 634 8665",         href: "tel:+639656348665"               },
+                  {
+                    icon: <Mail className="w-6 h-6" />,
+                    label: "Drop me an email",
+                    value: "nuestrocedrick@gmail.com",
+                    href: "mailto:nuestrocedrick@gmail.com",
+                  },
+                  {
+                    icon: <Phone className="w-6 h-6" />,
+                    label: "Call or WhatsApp",
+                    value: "+63 965 634 8665",
+                    href: "tel:+639656348665",
+                  },
                 ].map(({ icon, label, value, href }) => (
                   <div key={href} className="flex items-center gap-5 group cursor-pointer">
                     <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-2xl flex items-center justify-center text-[var(--primary-blue)] backdrop-blur-sm group-hover:bg-[var(--primary-blue)] group-hover:text-white transition-colors">
@@ -619,7 +827,9 @@ export default function App() {
                     </div>
                     <div>
                       <p className="text-sm text-[var(--text-secondary)] mb-1">{label}</p>
-                      <a href={href} className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-blue)] transition-colors">{value}</a>
+                      <a href={href} className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-blue)] transition-colors">
+                        {value}
+                      </a>
                     </div>
                   </div>
                 ))}
@@ -627,42 +837,76 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Side */}
           <div className="flex-1 p-10 md:p-16 bg-[var(--bg-secondary)]">
             <h3 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Send a Proposal</h3>
-            <p className="text-[var(--text-secondary)] mb-8 text-sm">Fill out the form below and I&apos;ll get back to you within 24 hours.</p>
+            <p className="text-[var(--text-secondary)] mb-8 text-sm">
+              Fill out the form below and I’ll get back to you within 24 hours.
+            </p>
             <form onSubmit={handleFormSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {[
-                  { label: "Your Name",     type: "text",  placeholder: "John Doe"        },
-                  { label: "Email Address", type: "email", placeholder: "john@company.com" },
-                ].map(({ label, type, placeholder }) => (
-                  <div key={label}>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">{label}</label>
-                    <input
-                      required
-                      type={type}
-                      placeholder={placeholder}
-                      className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
-                    />
-                  </div>
-                ))}
+                <div>
+                  <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                    Your Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    required
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    required
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="john@company.com"
+                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">What do you need help with?</label>
-                <select className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all appearance-none">
-                  {["Graphic Design", "Social Media Management", "Virtual Assistant Services", "Other"].map((o) => (
-                    <option key={o}>{o}</option>
+                <label htmlFor="service" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                  What do you need help with?
+                </label>
+                <select
+                  id="service"
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all appearance-none"
+                >
+                  {["Graphic Design", "Social Media Management", "Virtual Assistant Services", "Other"].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">Project Details</label>
+                <label htmlFor="details" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                  Project Details
+                </label>
                 <textarea
+                  id="details"
+                  name="details"
                   required
                   rows="4"
+                  value={formData.details}
+                  onChange={handleChange}
                   placeholder="Tell me about your brand and what you are looking to achieve..."
                   className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all resize-none"
                 />
@@ -670,7 +914,7 @@ export default function App() {
 
               {formStatus === "success" && (
                 <div className="p-4 bg-green-500/10 border border-green-500/50 text-green-500 rounded-xl text-sm font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5" /> Message sent! I&apos;ll review this shortly.
+                  <CheckCircle2 className="w-5 h-5" /> Message sent! I’ll review this shortly.
                 </div>
               )}
 
@@ -685,7 +929,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="bg-[var(--bg-primary)] py-12 border-t border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
@@ -696,9 +939,9 @@ export default function App() {
           </div>
           <div className="flex gap-4">
             {[
-              { href: "mailto:nuestrocedrick@gmail.com",                  icon: <Mail className="w-5 h-5" />,     label: "Email"    },
-              { href: "https://www.linkedin.com/in/cedricknuestro/",      icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
-              { href: "https://v2.onlinejobs.ph/jobseekers/info/4579627", icon: <Globe className="w-5 h-5" />,    label: "OLJ"      },
+              { href: "mailto:nuestrocedrick@gmail.com", icon: <Mail className="w-5 h-5" />, label: "Email" },
+              { href: "https://www.linkedin.com/in/cedricknuestro/", icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
+              { href: "https://v2.onlinejobs.ph/jobseekers/info/4579627", icon: <Globe className="w-5 h-5" />, label: "OLJ" },
             ].map(({ href, icon, label }) => (
               <a
                 key={label}
@@ -719,11 +962,12 @@ export default function App() {
         </div>
       </footer>
 
-      {/* ── Lightbox ──────────────────────────────────────────────────────── */}
       {selectedImage && (
         <div
           className="fixed inset-0 z-[999] bg-black/90 flex items-center justify-center p-4 sm:p-6"
           onClick={() => setSelectedImage(null)}
+          role="dialog"
+          aria-modal="true"
         >
           <div
             className="relative flex items-center justify-center max-w-[95vw] max-h-[90vh]"
