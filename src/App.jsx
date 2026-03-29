@@ -586,32 +586,40 @@ export default function App() {
 
       {/* ── Contact ───────────────────────────────────────────────────────── */}
       <section id="contact" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
+          
+          {/* Left Side (Updated for Light/Dark Mode compatibility) */}
           <div
             className="flex-1 p-10 md:p-16 flex flex-col justify-between relative overflow-hidden"
             style={{ background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))" }}
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary-blue)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            
             <div className="relative z-10">
-              <span className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider mb-6">
+              <span className="inline-block py-1 px-3 rounded-full bg-[var(--primary-blue)]/10 border border-[var(--primary-blue)]/20 text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider mb-6">
                 Currently Accepting Projects
               </span>
-              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-white">Let&apos;s build something great.</h2>
-              <p className="text-slate-200 mb-12 text-lg">
+              
+              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+                Let&apos;s build something great.
+              </h2>
+              
+              <p className="text-[var(--text-secondary)] mb-12 text-lg">
                 Whether you need a full rebrand, social media management, or a reliable VA, I&apos;m ready to help you scale.
               </p>
+              
               <div className="space-y-8">
                 {[
                   { icon: <Mail className="w-6 h-6" />,  label: "Drop me an email",  value: "nuestrocedrick@gmail.com", href: "mailto:nuestrocedrick@gmail.com" },
                   { icon: <Phone className="w-6 h-6" />, label: "Call or WhatsApp",  value: "+63 965 634 8665",         href: "tel:+639656348665"               },
                 ].map(({ icon, label, value, href }) => (
                   <div key={href} className="flex items-center gap-5 group cursor-pointer">
-                    <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-[var(--primary-blue)] transition-colors">
+                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-2xl flex items-center justify-center text-[var(--primary-blue)] backdrop-blur-sm group-hover:bg-[var(--primary-blue)] group-hover:text-white transition-colors">
                       {icon}
                     </div>
                     <div>
-                      <p className="text-sm text-slate-300 mb-1">{label}</p>
-                      <a href={href} className="text-lg font-bold text-white group-hover:text-[var(--primary-blue)] transition-colors">{value}</a>
+                      <p className="text-sm text-[var(--text-secondary)] mb-1">{label}</p>
+                      <a href={href} className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-blue)] transition-colors">{value}</a>
                     </div>
                   </div>
                 ))}
@@ -619,6 +627,7 @@ export default function App() {
             </div>
           </div>
 
+          {/* Right Side */}
           <div className="flex-1 p-10 md:p-16 bg-[var(--bg-secondary)]">
             <h3 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Send a Proposal</h3>
             <p className="text-[var(--text-secondary)] mb-8 text-sm">Fill out the form below and I&apos;ll get back to you within 24 hours.</p>
