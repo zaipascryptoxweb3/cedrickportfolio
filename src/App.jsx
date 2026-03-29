@@ -4,21 +4,25 @@ import streatLogo from "./assets/logo/streatc.png";
 import mythLogo from "./assets/logo/mythw.png";
 import sflLogo from "./assets/logo/sflegends.png";
 import jfinexLogo from "./assets/logo/jfinex.png";
-import photoshopLogo from "./assets/tools/photoshop.png";
-import googleLogo from "./assets/tools/googlew.png";
-import microsoftLogo from "./assets/tools/microsoft.jpg";
-import canvaLogo from "./assets/tools/canva.png";
-import claudeLogo from "./assets/tools/claude.png";
-import geminiLogo from "./assets/tools/gemini.png";
-import chatgptLogo from "./assets/tools/chatgpt.png";
-import capcutLogo from "./assets/tools/capcut.png";
-import slackLogo from "./assets/tools/slack.jpg";
-import grammarlyLogo from "./assets/tools/gram.png";
-import n8nLogo from "./assets/tools/n8n.png";
-import metaLogo from "./assets/tools/meta.png";
-import hostingerLogo from "./assets/tools/htgr.png";
-import vsLogo from "./assets/tools/vsss.png";
-import notionLogo from "./assets/tools/notion.png";
+
+// --- FIXED IMPORTS: Now pointing to the new tech-icons folder ---
+import photoshopLogo from "./assets/tech-icons/photoshop.png";
+import googleLogo from "./assets/tech-icons/googlew.png";
+import microsoftLogo from "./assets/tech-icons/microsoft.jpg";
+import canvaLogo from "./assets/tech-icons/canva.png";
+import claudeLogo from "./assets/tech-icons/claude.png";
+import geminiLogo from "./assets/tech-icons/gemini.png";
+import chatgptLogo from "./assets/tech-icons/chatgpt.png";
+import capcutLogo from "./assets/tech-icons/capcut.png";
+import slackLogo from "./assets/tech-icons/slack.jpg";
+import grammarlyLogo from "./assets/tech-icons/gram.png";
+import n8nLogo from "./assets/tech-icons/n8n.png";
+import metaLogo from "./assets/tech-icons/meta.png";
+import hostingerLogo from "./assets/tech-icons/htgr.png";
+import vsLogo from "./assets/tech-icons/vsss.png";
+import notionLogo from "./assets/tech-icons/notion.png";
+// ----------------------------------------------------------------
+
 import zaipasPhoto from "./assets/zaipas.jpg";
 import {
   Menu,
@@ -110,26 +114,26 @@ const PORTFOLIO = [
     image: "/projects/CH.jpg",
   },
   {
-  title: "SF Legends",
-  category: "Event Design",
-  description: "A bold social media campaign showcasing the elegant, floral-themed Rose Weapon Series.",
-  metric: "35% increase in direct-to-store purchases",
-  image: "/projects/sfl.jpg",
-},
-{
-  title: "SF Legends 2",
-  category: "Event Design",
-  description: "Elegant promotional materials designed to emphasize the classic, ornate detailing of the Porcelain series.",
-  metric: "Drove a 25% increase in overall daily revenue",
-  image: "/projects/sfl2.jpg",
-},
-{
-  title: "SF Legends 3",
-  category: "Event Design",
-  description: "Luxurious promotional assets for a collector-grade weapon, emphasizing intricate metal scrollwork.",
-  metric: "Sold over 50,000 lotto spins within the first 48 hours",
-  image: "/projects/sfl3.jpg",
-},
+    title: "SF Legends",
+    category: "Event Design",
+    description: "A bold social media campaign showcasing the elegant, floral-themed Rose Weapon Series.",
+    metric: "35% increase in direct-to-store purchases",
+    image: "/projects/sfl.jpg",
+  },
+  {
+    title: "SF Legends 2",
+    category: "Event Design",
+    description: "Elegant promotional materials designed to emphasize the classic, ornate detailing of the Porcelain series.",
+    metric: "Drove a 25% increase in overall daily revenue",
+    image: "/projects/sfl2.jpg",
+  },
+  {
+    title: "SF Legends 3",
+    category: "Event Design",
+    description: "Luxurious promotional assets for a collector-grade weapon, emphasizing intricate metal scrollwork.",
+    metric: "Sold over 50,000 lotto spins within the first 48 hours",
+    image: "/projects/sfl3.jpg",
+  },
 ];
 
 const GRAPHIC_DESIGNS = [
@@ -166,7 +170,7 @@ const SKILL_CATEGORIES = [
 ];
 
 const TOOLS = [
-  { name: "Adobe Photoshop", icon: <img src={photoshopLogo} alt="PS" className="w-5 h-5" /> },
+  { name: "Adobe Photoshop", icon: <img src={photoshopLogo} alt="Photoshop" className="w-5 h-5" /> },
   { name: "Canva Pro", icon: <img src={canvaLogo} alt="Canva" className="w-5 h-5" /> },
   { name: "Capcut", icon: <img src={capcutLogo} alt="Capcut" className="w-5 h-5" /> },
   { name: "Meta Business", icon: <img src={metaLogo} alt="Meta" className="w-5 h-5" /> },
