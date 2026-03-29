@@ -4,7 +4,7 @@ import streatLogo from "./assets/logo/streatc.png";
 import mythLogo from "./assets/logo/mythw.png";
 import sflLogo from "./assets/logo/sflegends.png";
 import jfinexLogo from "./assets/logo/jfinex.png";
-import photoshopLogo from "./assets/tools/ps.png";
+import photoshopLogo from "./assets/tools/photoshop.png";
 import googleLogo from "./assets/tools/googlew.png";
 import microsoftLogo from "./assets/tools/microsoft.jpg";
 import canvaLogo from "./assets/tools/canva.png";
