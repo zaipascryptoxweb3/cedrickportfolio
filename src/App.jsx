@@ -7,24 +7,6 @@ import {
 } from "lucide-react";
 
 // ─── All images served from /public — zero build-time import errors ───────────
-// Expected public folder structure:
-//   /public/logo/francesca.png, streatc.png, mythw.png, sflegends.png, jfinex.png
-//   /public/tech-icons/photoshop.png, googlew.png, microsoft.jpg, canva.png,
-//           claude.png, gemini.png, chatgpt.png, capcut.png, slack.jpg,
-//           gram.png, n8n.png, meta.png, htgr.png, vsss.png, notion.png
-//   /public/projects/Francesca.jpg, mikha.jpg, BCC.jpg, BSBA.jpg, Cma1.jpg,
-//           CH.jpg, sfl.jpg, sfl2.jpg, sfl3.jpg
-//   /public/design/Champs.jpg, JFINEX1.jpg, Streat.jpg
-//   /public/zaipas.jpg
-//   /public/cv/SMM_Cedrick_Nuestro.pdf
-
-const LOGOS = [
-  { src: "/logo/francesca.png", alt: "Francesca Cafe Logo", label: "Francesca Cafe" },
-  { src: "/logo/streatc.png",   alt: "Streat Cafe Logo",    label: "Streat Cafe"    },
-  { src: "/logo/mythw.png",     alt: "Myth Games Logo",     label: "Myth Games"     },
-  { src: "/logo/sflegends.png", alt: "SF Legends Logo",     label: "SF Legends"     },
-  { src: "/logo/jfinex.png",    alt: "JFINEX Logo",         label: "JFINEX PAU"     },
-];
 
 const NAV_LINKS = ["Home", "About", "Services", "Portfolio", "Experience", "Contact"];
 
@@ -53,7 +35,7 @@ const PORTFOLIO = [
   { title: "Francesca Cafe Branding",  category: "Brand Identity",       description: '"Brewing Soon" promotional campaign establishing core brand visuals.',                                  metric: "Successful launch with high local engagement",            image: "/projects/Francesca.jpg" },
   { title: "Facebook DP Blast",        category: "Social Media Campaign", description: "Dynamic event posters designed for university student organizations.",                                  metric: "+40% increase in student participation",                  image: "/projects/mikha.jpg"     },
   { title: "Conference Campaign",      category: "Corporate Marketing",   description: "Campaign posters for corporate events and professional conferences.",                                   metric: "Streamlined event registration process",                  image: "/projects/BCC.jpg"       },
-  { title: "BSBA DAYS 2024",           category: "Event Branding",        description: "BINI Inspired Design for BSBA Students.",                                                               metric: "Boosted campus-wide visibility",                          image: "/projects/BSBA.jpg"      },
+  { title: "BSBA DAYS 2024",           category: "Event Branding",        description: "BINI Inspired Design for BSBA Students.",                                                             metric: "Boosted campus-wide visibility",                          image: "/projects/BSBA.jpg"      },
   { title: "Your Face Looks Familiar", category: "Event Design",          description: "Talent & Impersonation Showcase promotional assets.",                                                   metric: "Record-breaking event turnout",                           image: "/projects/Cma1.jpg"      },
   { title: "Chick and Hunk 2024",      category: "Event Design",          description: "Highlighting the charm and stage presence of BSBA participants.",                                       metric: "High social media interaction",                           image: "/projects/CH.jpg"        },
   { title: "SF Legends",               category: "Event Design",          description: "A bold social media campaign showcasing the elegant, floral-themed Rose Weapon Series.",                metric: "35% increase in direct-to-store purchases",               image: "/projects/sfl.jpg"       },
@@ -71,24 +53,6 @@ const SKILL_CATEGORIES = [
   { name: "Design & Creative",    skills: ["Brand Identity", "Social Media Graphics", "UI/Layout Design", "Video Editing"]            },
   { name: "Marketing & Strategy", skills: ["Content Calendars", "Community Management", "Copywriting", "Analytics Reporting"]         },
   { name: "Business & Admin",     skills: ["Project Management", "Client Communication", "Financial Analysis", "Workflow Automation"] },
-];
-
-const TOOLS = [
-  { name: "Adobe Photoshop",  src: "/tech-icons/photoshop.png" },
-  { name: "Canva Pro",        src: "/tech-icons/canva.png"     },
-  { name: "Capcut",           src: "/tech-icons/capcut.png"    },
-  { name: "Meta Business",    src: "/tech-icons/meta.png"      },
-  { name: "Google Workspace", src: "/tech-icons/googlew.png"   },
-  { name: "Microsoft Office", src: "/tech-icons/microsoft.jpg" },
-  { name: "Notion",           src: "/tech-icons/notion.png"    },
-  { name: "Slack",            src: "/tech-icons/slack.jpg"     },
-  { name: "n8n (Automation)", src: "/tech-icons/n8n.png"       },
-  { name: "ChatGPT / AI",     src: "/tech-icons/chatgpt.png"   },
-  { name: "Gemini",           src: "/tech-icons/gemini.png"    },
-  { name: "Claude",           src: "/tech-icons/claude.png"    },
-  { name: "Grammarly",        src: "/tech-icons/gram.png"      },
-  { name: "Hostinger",        src: "/tech-icons/htgr.png"      },
-  { name: "Visual Studio",    src: "/tech-icons/vsss.png"      },
 ];
 
 // ─── SafeImg: shows a coloured initial if the image fails to load ─────────────
@@ -204,6 +168,35 @@ export default function App() {
   const [formStatus,    setFormStatus]    = useState(null);
   const [theme,         setTheme]         = useState("dark");
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // ─── DYNAMIC LOGOS (Switches based on Theme) ──────────────
+  const dynamicLogos = [
+    { src: theme === "light" ? "/logo/francescab.png" : "/logo/francesca.png", alt: "Francesca Cafe Logo", label: "Francesca Cafe" },
+    { src: "/logo/streatc.png",   alt: "Streat Cafe Logo",    label: "Streat Cafe"    },
+    { src: theme === "light" ? "/logo/mythb.png" : "/logo/mythw.png",     alt: "Myth Games Logo",     label: "Myth Games"     },
+    { src: "/logo/sflegends.png", alt: "SF Legends Logo",     label: "SF Legends"     },
+    { src: "/logo/jfinex.png",    alt: "JFINEX Logo",         label: "JFINEX PAU"     },
+  ];
+
+  // ─── DYNAMIC TOOLS (Switches based on Theme) ──────────────
+  const dynamicTools = [
+    { name: "Adobe Photoshop",  src: "/tech-icons/photoshop.png" },
+    { name: "Canva Pro",        src: "/tech-icons/canva.png"     },
+    { name: "Capcut",           src: "/tech-icons/capcut.png"    },
+    { name: "Meta Business",    src: "/tech-icons/meta.png"      },
+    // Example: If you upload a colored Google logo named "googleb.png" to your public/tech-icons folder, this will swap it!
+    { name: "Google Workspace", src: theme === "light" ? "/tech-icons/googleb.png" : "/tech-icons/googlew.png" },
+    { name: "Microsoft Office", src: "/tech-icons/microsoft.jpg" },
+    { name: "Notion",           src: "/tech-icons/notion.png"    },
+    { name: "Slack",            src: "/tech-icons/slack.jpg"     },
+    { name: "n8n (Automation)", src: "/tech-icons/n8n.png"       },
+    { name: "ChatGPT / AI",     src: "/tech-icons/chatgpt.png"   },
+    { name: "Gemini",           src: "/tech-icons/gemini.png"    },
+    { name: "Claude",           src: "/tech-icons/claude.png"    },
+    { name: "Grammarly",        src: "/tech-icons/gram.png"      },
+    { name: "Hostinger",        src: "/tech-icons/htgr.png"      },
+    { name: "Visual Studio",    src: "/tech-icons/vsss.png"      },
+  ];
 
   useEffect(() => {
     const handle = (e) => { if (e.key === "Escape") setSelectedImage(null); };
@@ -343,7 +336,7 @@ export default function App() {
             Trusted by organisations &amp; brands
           </p>
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
-            {LOGOS.map(({ src, alt, label }) => (
+            {dynamicLogos.map(({ src, alt, label }) => (
               <div
                 key={label}
                 className="flex flex-col items-center gap-3 group opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 cursor-default"
@@ -513,7 +506,6 @@ export default function App() {
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
               <Briefcase className="text-[var(--primary-blue)]" /> Professional Journey
             </h2>
-
             <div className="space-y-10 mb-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[var(--primary-blue)] before:to-transparent">
               <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--primary-blue)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md" />
@@ -576,7 +568,7 @@ export default function App() {
                 Tech Stack &amp; Tools
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {TOOLS.map((tool, index) => (
+                {dynamicTools.map((tool, index) => (
                   <div
                     key={index}
                     className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl hover:border-[var(--primary-blue)]/50 transition-colors"
@@ -612,7 +604,7 @@ export default function App() {
               <div className="space-y-8">
                 {[
                   { icon: <Mail className="w-6 h-6" />,  label: "Drop me an email",  value: "nuestrocedrick@gmail.com", href: "mailto:nuestrocedrick@gmail.com" },
-                  { icon: <Phone className="w-6 h-6" />, label: "Call or WhatsApp",   value: "+63 965 634 8665",          href: "tel:+639656348665"               },
+                  { icon: <Phone className="w-6 h-6" />, label: "Call or WhatsApp",  value: "+63 965 634 8665",         href: "tel:+639656348665"               },
                 ].map(({ icon, label, value, href }) => (
                   <div key={href} className="flex items-center gap-5 group cursor-pointer">
                     <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white backdrop-blur-sm group-hover:bg-[var(--primary-blue)] transition-colors">
@@ -634,7 +626,7 @@ export default function App() {
             <form onSubmit={handleFormSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {[
-                  { label: "Your Name",     type: "text",  placeholder: "John Doe"         },
+                  { label: "Your Name",     type: "text",  placeholder: "John Doe"        },
                   { label: "Email Address", type: "email", placeholder: "john@company.com" },
                 ].map(({ label, type, placeholder }) => (
                   <div key={label}>
