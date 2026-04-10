@@ -24,6 +24,7 @@ import {
 
 const NAV_LINKS = [
   { label: "Home", id: "home" },
+  { label: "Funnels", id: "funnels" },
   { label: "About", id: "about" },
   { label: "Services", id: "services" },
   { label: "Portfolio", id: "portfolio" },
@@ -32,6 +33,17 @@ const NAV_LINKS = [
 ];
 
 const SERVICES = [
+  {
+    icon: Layout,
+    title: "Funnel Design",
+    description: "High-converting landing pages and lead generation funnels tailored to specific industries.",
+    items: [
+      "Landing Page Design",
+      "Lead Capture Layouts",
+      "Conversion-Focused CTA Structure",
+      "Case Study Style Portfolio Mockups",
+    ],
+  },
   {
     icon: PenTool,
     title: "Brand & Graphic Design",
@@ -44,7 +56,7 @@ const SERVICES = [
     ],
   },
   {
-    icon: Layout,
+    icon: MonitorSmartphone,
     title: "Social Media Strategy",
     description: "Building engaged communities through consistent, data-driven content.",
     items: [
@@ -54,16 +66,29 @@ const SERVICES = [
       "Engagement Analytics",
     ],
   },
+];
+
+const FUNNELS = [
   {
-    icon: MonitorSmartphone,
-    title: "Digital Marketing Support",
-    description: "Streamlining your digital operations so you can focus on scaling.",
-    items: [
-      "Video & Shorts Editing",
-      "Email Management",
-      "Market Research",
-      "Customer Support Setup",
-    ],
+    title: "Gym Lead Generation Funnel",
+    category: "Fitness Funnel",
+    description: "Designed to convert visitors into trial gym members with a clear CTA and lead form structure.",
+    metric: "Lead generation focused",
+    image: "/funnels/gym.jpg",
+  },
+  {
+    title: "Dental Appointment Funnel",
+    category: "Dental Funnel",
+    description: "A clean, trust-based landing page built to generate patient appointments for dental clinics.",
+    metric: "Appointment booking ready",
+    image: "/funnels/dental.jpg",
+  },
+  {
+    title: "Real Estate Funnel",
+    category: "Real Estate Funnel",
+    description: "A high-converting property funnel created to capture qualified buyer and seller leads.",
+    metric: "Qualified lead capture",
+    image: "/funnels/realestate.jpg",
   },
 ];
 
@@ -114,7 +139,8 @@ const PORTFOLIO = [
     title: "Rose Weapon Series Campaign",
     category: "Game Campaign",
     description: "A bold social media campaign showcasing the floral-themed Rose Weapon Series.",
-    metric: "Increased engagement and improved click-through rates through visually distinctive design and targeted audience appeal.",
+    metric:
+      "Increased engagement and improved click-through rates through visually distinctive design and targeted audience appeal.",
     image: "/projects/sfl.jpg",
   },
   {
@@ -128,27 +154,30 @@ const PORTFOLIO = [
     title: "AK-74 Premium Weapon Campaign",
     category: "Game Campaign",
     description: "Luxurious promotional assets for a collector-grade weapon with intricate metal scrollwork.",
-    metric: "Increased user curiosity and in-game engagement through premium positioning and detailed product presentation.",
+    metric:
+      "Increased user curiosity and in-game engagement through premium positioning and detailed product presentation.",
     image: "/projects/sfl3.jpg",
   },
   {
     title: "24K PSG-1 Event Campaign",
     category: "Game Campaign",
-    description: "High-converting event creative highlighting premium weapon rewards. Designed to drive urgency and increase in-game purchases.",
-    metric: "Improved conversion intent and player participation through urgency-driven messaging and strong visual hierarchy.",
+    description:
+      "High-converting event creative highlighting premium weapon rewards. Designed to drive urgency and increase in-game purchases.",
+    metric:
+      "Improved conversion intent and player participation through urgency-driven messaging and strong visual hierarchy.",
     image: "/projects/sfl4.jpg",
   },
   {
     title: "SF Legends Tournament Campaign",
     category: "Game Campaign",
-    description: "Elegant promotional materials for the classic ornate Porcelain series.",
-    metric: "Event-focused campaign designed to promote competitive gameplay and tournament participation. Leveraged dynamic character composition and strong prize emphasis.",
+    description: "Event-focused campaign designed to promote competitive gameplay and tournament participation.",
+    metric: "Leveraged dynamic character composition and strong prize emphasis.",
     image: "/projects/sfl5.jfif",
   },
   {
     title: "Game Launch",
     category: "Game Campaign",
-    description: "Luxurious promotional assets for a collector-grade weapon with intricate metal scrollwork.",
+    description: "Launch visuals created to introduce the game and build anticipation across platforms.",
     metric: "Improved click-through rates and install intent through clear call-to-action and platform-focused design.",
     image: "/projects/sfl6.jpg",
   },
@@ -163,11 +192,11 @@ const GRAPHIC_DESIGNS = [
 const SKILL_CATEGORIES = [
   {
     name: "Design & Creative",
-    skills: ["Brand Identity", "Social Media Graphics", "UI/Layout Design", "Video Editing"],
+    skills: ["Funnel Design", "Brand Identity", "Social Media Graphics", "UI/Layout Design", "Video Editing"],
   },
   {
     name: "Marketing & Strategy",
-    skills: ["Content Calendars", "Community Management", "Copywriting", "Analytics Reporting"],
+    skills: ["Lead Generation", "Content Calendars", "Community Management", "Copywriting", "Analytics Reporting"],
   },
   {
     name: "Business & Admin",
@@ -198,15 +227,7 @@ function SafeImg({ src, alt, className }) {
     );
   }
 
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={className}
-      loading="lazy"
-      onError={() => setErrored(true)}
-    />
-  );
+  return <img src={src} alt={alt} className={className} loading="lazy" onError={() => setErrored(true)} />;
 }
 
 function Navbar({ theme, toggleTheme }) {
@@ -328,7 +349,7 @@ export default function App() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    service: "Graphic Design",
+    service: "Funnel Design",
     details: "",
   });
 
@@ -403,7 +424,7 @@ export default function App() {
     setFormData({
       name: "",
       email: "",
-      service: "Graphic Design",
+      service: "Funnel Design",
       details: "",
     });
   };
@@ -473,15 +494,16 @@ export default function App() {
           </div>
 
           <h1 className="text-4xl md:text-6xl md:leading-[1.1] font-serif font-bold text-[var(--text-primary)]">
-            I design visuals &amp; strategies that{" "}
+            I design visuals, funnels &amp; strategies that{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-blue)] to-blue-400">
               drive growth.
             </span>
           </h1>
 
           <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto md:mx-0 leading-relaxed">
-            I’m Cedrick, a graphic designer and social media marketer helping businesses, gaming communities,
-            and personal brands create visuals that connect with audiences and support real growth.
+            I’m Cedrick, a funnel designer, graphic designer, and social media marketer helping businesses,
+            gaming communities, and personal brands create visuals and systems that attract attention,
+            generate leads, and support real growth.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
@@ -525,6 +547,58 @@ export default function App() {
         </div>
       </section>
 
+      <section id="funnels" className="py-20 md:py-28 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+              High-Converting Funnels
+            </h2>
+            <p className="text-[var(--text-secondary)] max-w-3xl mx-auto text-lg leading-relaxed">
+              Funnels designed for different industries to generate leads, support conversions, and position brands more professionally online.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {FUNNELS.map((item) => (
+              <button
+                key={item.title}
+                type="button"
+                onClick={() => openImage(item.image, item.title)}
+                className="group flex flex-col rounded-2xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                aria-label={`View full image of ${item.title}`}
+              >
+                <div className="aspect-[4/5] overflow-hidden relative">
+                  <SafeImg
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
+                    <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                  </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4" /> View Funnel
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
+                  <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                    <TrendingUp className="w-4 h-4 text-green-500" />
+                    <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <div className="border-y border-[var(--border-color)] bg-[var(--bg-primary)] py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
@@ -557,7 +631,7 @@ export default function App() {
                 I design with business goals, audience attention, and conversion in mind.
               </p>
               <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-                Whether you need a brand refresh, social content that performs, or dependable creative support, I bring
+                Whether you need a brand refresh, a lead generation funnel, or dependable creative support, I bring
                 structure, speed, and visual consistency to every project.
               </p>
               <div className="flex gap-4 flex-wrap sm:flex-nowrap">
@@ -575,10 +649,10 @@ export default function App() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
-                <PenTool className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Visual Design</h3>
+                <Layout className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
+                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Funnel Design</h3>
                 <p className="text-[var(--text-secondary)] text-sm">
-                  Clean layouts, strong branding, and polished marketing materials tailored to your audience.
+                  Landing pages and conversion-focused funnel visuals built to generate more leads.
                 </p>
               </div>
               <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
@@ -598,7 +672,7 @@ export default function App() {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">How I can help you</h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
-              Comprehensive digital support tailored to scale your brand efficiently.
+              Comprehensive creative and digital support tailored to help your brand grow.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -728,11 +802,11 @@ export default function App() {
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--primary-blue)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md" />
                 <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] hover-card">
                   <div className="text-[var(--primary-blue)] font-bold text-sm mb-1 uppercase tracking-wider">2021 – Present</div>
-                  <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Freelance Graphic Designer &amp; SMM</h3>
+                  <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Freelance Funnel Designer, Graphic Designer &amp; SMM</h3>
                   <div className="text-[var(--text-secondary)] text-sm space-y-2 mt-3">
-                    <p>• Built brand identities and campaigns for cafés, student organizations, and gaming communities.</p>
+                    <p>• Built brand identities, landing page concepts, and campaigns for cafés, student organizations, gaming communities, and lead generation use cases.</p>
                     <p>• Managed end-to-end design deliverables with consistent turnaround and client communication.</p>
-                    <p>• Turned abstract client ideas into clear visuals and practical content strategies.</p>
+                    <p>• Turned abstract client ideas into clear visuals, funnel structures, and practical content strategies.</p>
                   </div>
                 </div>
               </div>
@@ -824,7 +898,7 @@ export default function App() {
               </h2>
 
               <p className="text-[var(--text-secondary)] mb-12 text-lg">
-                Whether you need a full rebrand, social media management, or reliable creative support, I’m ready to help you scale.
+                Whether you need a funnel, social media support, or reliable creative execution, I’m ready to help you grow.
               </p>
 
               <div className="space-y-8">
@@ -909,7 +983,13 @@ export default function App() {
                   onChange={handleChange}
                   className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all appearance-none"
                 >
-                  {["Graphic Design", "Social Media Management", "Virtual Assistant Services", "Other"].map((option) => (
+                  {[
+                    "Funnel Design",
+                    "Graphic Design",
+                    "Social Media Management",
+                    "Virtual Assistant Services",
+                    "Other",
+                  ].map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -956,7 +1036,7 @@ export default function App() {
             <div className="text-2xl font-serif font-bold text-[var(--text-primary)] mb-1">
               Cedrick<span className="text-[var(--primary-blue)]">.</span>
             </div>
-            <p className="text-[var(--text-secondary)] text-sm">Strategic Design &amp; Digital Management</p>
+            <p className="text-[var(--text-secondary)] text-sm">Strategic Design, Funnels &amp; Digital Management</p>
           </div>
           <div className="flex gap-4">
             {[
