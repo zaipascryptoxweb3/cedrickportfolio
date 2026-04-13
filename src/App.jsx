@@ -90,6 +90,27 @@ const FUNNELS = [
     metric: "Qualified lead capture",
     image: "/funnels/realestate.jpg",
   },
+  {
+    title: "SF Legends Funnel",
+    category: "Web3 Game Funnel",
+    description: "A high-converting game funnel designed to drive player acquisition, engagement, and retention.",
+    metric: "Player acquisition optimization",
+    image: "/funnels/sfl.jpg",
+  },
+  {
+    title: "Francesca Cafe Funnel",
+    category: "Cafe Funnel",
+    description: "A conversion-focused cafe funnel built to attract customers, promote menu items, and increase store visits.",
+    metric: "Customer conversion optimization.",
+    image: "/funnels/cafe.jpg",
+  },
+  {
+    title: "Automation Website Funnel",
+    category: "Automation Web Funnel",
+    description: "A high-performance funnel designed to showcase automation solutions and convert businesses into clients.",
+    metric: "Lead generation and client acquisition",
+    image: "/funnels/automation.jpg",
+  },
 ];
 
 const PORTFOLIO = [
