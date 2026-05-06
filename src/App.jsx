@@ -20,6 +20,9 @@ import {
   Globe,
   Download,
   Image as ImageIcon,
+  Award,
+  ExternalLink,
+  Calendar,
 } from "lucide-react";
 
 const NAV_LINKS = [
@@ -29,6 +32,7 @@ const NAV_LINKS = [
   { label: "Services", id: "services" },
   { label: "Portfolio", id: "portfolio" },
   { label: "Experience", id: "experience" },
+  { label: "Certifications", id: "certifications" },
   { label: "Contact", id: "contact" },
 ];
 
@@ -225,6 +229,27 @@ const SKILL_CATEGORIES = [
   },
 ];
 
+const CERTIFICATIONS = [
+  {
+    title: "Social Media Marketing II Certified",
+    issuer: "HubSpot Academy",
+    date: "May 2026 – Jun 2028",
+    credential: "https://app-na2.hubspot.com/academy/achievements/b4gkfktl/en/1/cedrick-nuestro/social-media-marketing-certification-ii",
+    description:
+      "Certified in applying next-level inbound social media marketing strategies including strategic planning, storytelling, community-led growth, social commerce, cookieless advertising, and short-form video creation.",
+    badge: "🏅",
+  },
+  {
+    title: "Social Media Certified",
+    issuer: "HubSpot Academy",
+    date: "May 2026 – Jun 2028",
+    credential: "https://app-na2.hubspot.com/academy/achievements/vdgqxrv7/en/1/cedrick-nuestro/social-media-marketing",
+    description:
+      "Certified in applying inbound social media strategy including social monitoring, content strategy, social engagement, creating social media policies, and demonstrating social ROI to stakeholders.",
+    badge: "🏅",
+  },
+];
+
 function SafeImg({ src, alt, className }) {
   const [errored, setErrored] = useState(false);
 
@@ -269,11 +294,10 @@ function Navbar({ theme, toggleTheme }) {
 
   return (
     <nav
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)] py-4"
-          : "bg-transparent py-6"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${isScrolled
+        ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-color)] py-4"
+        : "bg-transparent py-6"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
         <button
@@ -897,6 +921,67 @@ export default function App() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="certifications" className="py-20 md:py-32 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] mb-6">
+              <Award className="w-4 h-4 text-[var(--primary-blue)]" />
+              <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase">Verified Credentials</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+              Certifications & Training
+            </h2>
+            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
+              Continuous learning backed by industry-recognized certifications from leading platforms.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {CERTIFICATIONS.map((cert) => (
+              <div
+                key={cert.title}
+                className="group bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
+
+                <div className="flex items-start gap-4 mb-4 relative z-10">
+                  <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
+                    {cert.badge}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
+                      {cert.title}
+                    </h3>
+                    <p className="text-sm font-semibold text-[var(--primary-blue)]">{cert.issuer}</p>
+                  </div>
+                </div>
+
+                <p className="text-[var(--text-secondary)] text-sm mb-5 flex-1 relative z-10 leading-relaxed">
+                  {cert.description}
+                </p>
+
+                <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)] relative z-10">
+                  <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-xs font-bold uppercase tracking-wider">{cert.date}</span>
+                  </div>
+                  {cert.credential && (
+                    <a
+                      href={cert.credential}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary-blue)] hover:underline uppercase tracking-wider"
+                    >
+                      Verify <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
