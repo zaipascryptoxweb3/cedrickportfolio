@@ -572,12 +572,12 @@ export default function App() {
         <div className="flex-1 w-full max-w-md relative">
           <button
             type="button"
-            onClick={() => openImage("/zaipas.jpg", "Cedrick - Creative Professional")}
+            onClick={() => openImage("/zaipas2.jpg", "Cedrick - Creative Professional")}
             className="aspect-[4/5] w-full rounded-[2rem] overflow-hidden shadow-2xl relative border border-[var(--border-color)] group cursor-zoom-in block"
             aria-label="View full photo"
           >
             <SafeImg
-              src="/zaipas.jpg"
+              src="/zaipas2.jpg"
               alt="Cedrick - Creative Professional"
               className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
             />
