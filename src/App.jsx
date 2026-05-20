@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Menu,
   X,
@@ -276,6 +277,72 @@ function SafeImg({ src, alt, className }) {
   return <img src={src} alt={alt} className={className} loading="lazy" onError={() => setErrored(true)} />;
 }
 
+const MotionDiv = motion.div;
+
+function LoadingPreview() {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <MotionDiv
+      className="min-h-screen flex items-center justify-center px-6 bg-[var(--bg-primary)] text-[var(--text-primary)]"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="w-full max-w-sm text-center">
+        <div className="relative mx-auto mb-8 h-32 w-32">
+          <MotionDiv
+            className="absolute inset-0 rounded-full border border-[var(--primary-blue)]/20 border-t-[var(--primary-blue)]"
+            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+            transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+          />
+          <div className="absolute inset-3 overflow-hidden rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)]">
+            <SafeImg src="/zaipas2.jpg" alt="Cedrick Nuestro" className="h-full w-full object-cover" />
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <p className="text-sm font-bold uppercase tracking-[0.28em] text-[var(--primary-blue)]">Loading Portfolio</p>
+          <h1 className="mt-3 font-serif text-4xl font-bold">
+            Cedrick<span className="text-[var(--primary-blue)]">.</span>
+          </h1>
+          <p className="mt-3 text-sm font-medium text-[var(--text-secondary)]">
+            Preparing selected work, funnels, and creative projects.
+          </p>
+        </div>
+
+        <div className="h-1.5 overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
+          <MotionDiv
+            className="h-full rounded-full bg-[var(--primary-blue)]"
+            initial={{ width: "12%" }}
+            animate={{ width: "100%" }}
+            transition={{ duration: shouldReduceMotion ? 0 : 1.45, ease: "easeInOut" }}
+          />
+        </div>
+      </div>
+    </MotionDiv>
+  );
+}
+
+function Reveal({ children, className = "", delay = 0, ...props }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <MotionDiv
+      {...props}
+      className={className}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 28 }}
+      whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.18, margin: "0px 0px -80px 0px" }}
+      transition={{ duration: 0.55, ease: "easeOut", delay }}
+    >
+      {children}
+    </MotionDiv>
+  );
+}
+
 function Navbar({ theme, toggleTheme }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -385,6 +452,7 @@ function Navbar({ theme, toggleTheme }) {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [formStatus, setFormStatus] = useState(null);
   const [theme, setTheme] = useState(() => {
     if (typeof window === "undefined") return "dark";
@@ -397,6 +465,11 @@ export default function App() {
     service: "Funnel Design",
     details: "",
   });
+
+  useEffect(() => {
+    const loadingTimer = window.setTimeout(() => setIsLoading(false), 1650);
+    return () => window.clearTimeout(loadingTimer);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("portfolio-theme", theme);
@@ -516,6 +589,13 @@ export default function App() {
       box-shadow: 0 10px 30px -5px var(--card-hover-shadow), 0 8px 10px -6px var(--card-hover-shadow);
       transform: translateY(-4px);
     }
+    .portfolio-shell {
+      animation: portfolio-fade-in .45s ease-out both;
+    }
+    @keyframes portfolio-fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   `;
 
   return (
@@ -524,13 +604,18 @@ export default function App() {
       data-theme={theme}
     >
       <style>{themeStyles}</style>
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <LoadingPreview key="loading-preview" />
+        ) : (
+          <div key="portfolio-content" className="portfolio-shell">
+            <Navbar theme={theme} toggleTheme={toggleTheme} />
 
       <section
         id="home"
         className="pt-32 pb-16 md:pt-48 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20"
       >
-        <div className="flex-1 space-y-6 text-center md:text-left">
+        <Reveal className="flex-1 space-y-6 text-center md:text-left">
           <div className="inline-block px-4 py-1.5 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
             <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -567,9 +652,9 @@ export default function App() {
               <Download className="w-4 h-4" /> Download CV
             </a>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="flex-1 w-full max-w-md relative">
+        <Reveal className="flex-1 w-full max-w-md relative" delay={0.12}>
           <button
             type="button"
             onClick={() => openImage("/zaipas2.jpg", "Cedrick - Creative Professional")}
@@ -589,56 +674,57 @@ export default function App() {
           </button>
           <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[var(--primary-blue)]/10 rounded-full blur-2xl -z-10" />
           <div className="absolute top-10 -right-10 w-24 h-24 bg-[var(--primary-blue)]/20 rounded-full blur-xl -z-10" />
-        </div>
+        </Reveal>
       </section>
 
       <section id="funnels" className="py-20 md:py-28 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
               High-Converting Funnels
             </h2>
             <p className="text-[var(--text-secondary)] max-w-3xl mx-auto text-lg leading-relaxed">
               Funnels designed for different industries to generate leads, support conversions, and position brands more professionally online.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {FUNNELS.map((item) => (
-              <button
-                key={item.title}
-                type="button"
-                onClick={() => openImage(item.image, item.title)}
-                className="group flex flex-col rounded-2xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                aria-label={`View full image of ${item.title}`}
-              >
-                <div className="aspect-[4/5] overflow-hidden relative">
-                  <SafeImg
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
-                    <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" /> View Funnel
+            {FUNNELS.map((item, index) => (
+              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                <button
+                  type="button"
+                  onClick={() => openImage(item.image, item.title)}
+                  className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                  aria-label={`View full image of ${item.title}`}
+                >
+                  <div className="aspect-[4/5] overflow-hidden relative">
+                    <SafeImg
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
+                      <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> View Funnel
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
-                  <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
+                    <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                      <TrendingUp className="w-4 h-4 text-green-500" />
+                      <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -646,18 +732,17 @@ export default function App() {
 
       <div className="border-y border-[var(--border-color)] bg-[var(--bg-primary)] py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
+          <Reveal className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
             Trusted by organisations &amp; brands
-          </p>
+          </Reveal>
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
-            {dynamicLogos.map(({ src, alt, label }) => (
-              <div
-                key={label}
-                className="flex flex-col items-center gap-3 group opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 cursor-default"
-              >
-                <SafeImg src={src} alt={alt} className="h-12 md:h-14 w-auto object-contain" />
-                <span className="font-serif font-bold text-sm text-[var(--text-primary)] tracking-wide">{label}</span>
-              </div>
+            {dynamicLogos.map(({ src, alt, label }, index) => (
+              <Reveal key={label} delay={(index % 5) * 0.05}>
+                <div className="flex flex-col items-center gap-3 group opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 cursor-default">
+                  <SafeImg src={src} alt={alt} className="h-12 md:h-14 w-auto object-contain" />
+                  <span className="font-serif font-bold text-sm text-[var(--text-primary)] tracking-wide">{label}</span>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -666,7 +751,7 @@ export default function App() {
       <section id="about" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
+            <Reveal>
               <h2 className="text-3xl md:text-5xl font-serif font-bold mb-6 text-[var(--text-primary)]">
                 The perfect blend of <span className="text-[var(--primary-blue)]">Creative</span> &amp;{" "}
                 <span className="text-[var(--primary-blue)]">Business.</span>
@@ -690,23 +775,27 @@ export default function App() {
                   </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
-                <Layout className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Funnel Design</h3>
-                <p className="text-[var(--text-secondary)] text-sm">
-                  Landing pages and conversion-focused funnel visuals built to generate more leads.
-                </p>
-              </div>
-              <div className="bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
-                <BarChart3 className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
-                <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">ROI Focused</h3>
-                <p className="text-[var(--text-secondary)] text-sm">
-                  Every design choice supports visibility, engagement, and business growth.
-                </p>
-              </div>
+              <Reveal className="flex" delay={0.08}>
+                <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
+                  <Layout className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
+                  <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Funnel Design</h3>
+                  <p className="text-[var(--text-secondary)] text-sm">
+                    Landing pages and conversion-focused funnel visuals built to generate more leads.
+                  </p>
+                </div>
+              </Reveal>
+              <Reveal className="flex" delay={0.16}>
+                <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
+                  <BarChart3 className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
+                  <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">ROI Focused</h3>
+                  <p className="text-[var(--text-secondary)] text-sm">
+                    Every design choice supports visibility, engagement, and business growth.
+                  </p>
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -714,34 +803,33 @@ export default function App() {
 
       <section id="services" className="py-20 md:py-32 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">How I can help you</h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
               Comprehensive creative and digital support tailored to help your brand grow.
             </p>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {SERVICES.map((service) => {
+            {SERVICES.map((service, index) => {
               const Icon = service.icon;
               return (
-                <div
-                  key={service.title}
-                  className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col"
-                >
-                  <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
-                    <Icon className="w-6 h-6" />
+                <Reveal key={service.title} className="flex" delay={index * 0.08}>
+                  <div className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col">
+                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
+                    <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
+                    <ul className="mt-auto space-y-3">
+                      {service.items.map((item) => (
+                        <li key={item} className="flex items-start text-[var(--text-secondary)]">
+                          <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
+                          <span className="text-sm font-medium">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
-                  <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
-                  <ul className="mt-auto space-y-3">
-                    {service.items.map((item) => (
-                      <li key={item} className="flex items-start text-[var(--text-secondary)]">
-                        <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
-                        <span className="text-sm font-medium">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -750,47 +838,49 @@ export default function App() {
 
       <section id="portfolio" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="mb-12">
+          <Reveal className="mb-12">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Selected Work</h2>
             <p className="text-[var(--text-secondary)] max-w-xl text-lg">
               A showcase of visual solutions designed to capture attention and deliver results.
             </p>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PORTFOLIO.map((item) => (
-              <button
-                key={item.title}
-                type="button"
-                onClick={() => openImage(item.image, item.title)}
-                className="group flex flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                aria-label={`View full image of ${item.title}`}
-              >
-                <div className="aspect-[4/3] overflow-hidden relative">
-                  <SafeImg
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
-                    <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" /> View Full Photo
+            {PORTFOLIO.map((item, index) => (
+              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                <button
+                  type="button"
+                  onClick={() => openImage(item.image, item.title)}
+                  className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                  aria-label={`View full image of ${item.title}`}
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <SafeImg
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
+                      <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> View Full Photo
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
-                  <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
-                    <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
+                    <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                      <TrendingUp className="w-4 h-4 text-green-500" />
+                      <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -798,39 +888,40 @@ export default function App() {
 
       <section id="graphic-design" className="py-20 md:py-32 bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Portrait Design</h2>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">High-impact vertical layouts and event posters.</p>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {GRAPHIC_DESIGNS.map((item) => (
-              <button
-                key={item.title}
-                type="button"
-                onClick={() => openImage(item.image, item.title)}
-                className="group relative rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                aria-label={`View full image of ${item.title}`}
-              >
-                <div className="aspect-[1/1.414] overflow-hidden relative">
-                  <SafeImg
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                    <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2">{item.title}</h3>
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                      <span className="text-xs font-medium text-slate-200">{item.metric}</span>
+            {GRAPHIC_DESIGNS.map((item, index) => (
+              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                <button
+                  type="button"
+                  onClick={() => openImage(item.image, item.title)}
+                  className="group relative w-full rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                  aria-label={`View full image of ${item.title}`}
+                >
+                  <div className="aspect-[1/1.414] overflow-hidden relative">
+                    <SafeImg
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                      <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2">{item.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-green-500" />
+                        <span className="text-xs font-medium text-slate-200">{item.metric}</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4" /> Full View
+                      </div>
                     </div>
                   </div>
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" /> Full View
-                    </div>
-                  </div>
-                </div>
-              </button>
+                </button>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -838,7 +929,7 @@ export default function App() {
 
       <section id="experience" className="py-20 md:py-32 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
+          <Reveal>
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
               <Briefcase className="text-[var(--primary-blue)]" /> Professional Journey
             </h2>
@@ -879,9 +970,9 @@ export default function App() {
                 PHINMA Araullo University — Major in Financial Management
               </p>
             </div>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={0.08}>
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)]">Value Proposition</h2>
             <div className="space-y-8 mb-12">
               {SKILL_CATEGORIES.map((category) => (
@@ -921,13 +1012,13 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section id="certifications" className="py-20 md:py-32 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] mb-6">
               <Award className="w-4 h-4 text-[var(--primary-blue)]" />
               <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase">Verified Credentials</span>
@@ -938,56 +1029,55 @@ export default function App() {
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
               Continuous learning backed by industry-recognized certifications from leading platforms.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {CERTIFICATIONS.map((cert) => (
-              <div
-                key={cert.title}
-                className="group bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
+            {CERTIFICATIONS.map((cert, index) => (
+              <Reveal key={cert.title} className="flex" delay={index * 0.08}>
+                <div className="group w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
 
-                <div className="flex items-start gap-4 mb-4 relative z-10">
-                  <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
-                    {cert.badge}
+                  <div className="flex items-start gap-4 mb-4 relative z-10">
+                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
+                      {cert.badge}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
+                        {cert.title}
+                      </h3>
+                      <p className="text-sm font-semibold text-[var(--primary-blue)]">{cert.issuer}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
-                      {cert.title}
-                    </h3>
-                    <p className="text-sm font-semibold text-[var(--primary-blue)]">{cert.issuer}</p>
+
+                  <p className="text-[var(--text-secondary)] text-sm mb-5 flex-1 relative z-10 leading-relaxed">
+                    {cert.description}
+                  </p>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)] relative z-10">
+                    <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-xs font-bold uppercase tracking-wider">{cert.date}</span>
+                    </div>
+                    {cert.credential && (
+                      <a
+                        href={cert.credential}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary-blue)] hover:underline uppercase tracking-wider"
+                      >
+                        Verify <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                   </div>
                 </div>
-
-                <p className="text-[var(--text-secondary)] text-sm mb-5 flex-1 relative z-10 leading-relaxed">
-                  {cert.description}
-                </p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)] relative z-10">
-                  <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
-                    <Calendar className="w-4 h-4" />
-                    <span className="text-xs font-bold uppercase tracking-wider">{cert.date}</span>
-                  </div>
-                  {cert.credential && (
-                    <a
-                      href={cert.credential}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary-blue)] hover:underline uppercase tracking-wider"
-                    >
-                      Verify <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  )}
-                </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       <section id="contact" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
+        <Reveal className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
           <div
             className="flex-1 p-10 md:p-16 flex flex-col justify-between relative overflow-hidden"
             style={{ background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))" }}
@@ -1133,7 +1223,7 @@ export default function App() {
               </button>
             </form>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <footer className="bg-[var(--bg-primary)] py-12 border-t border-[var(--border-color)]">
@@ -1196,6 +1286,9 @@ export default function App() {
           </div>
         </div>
       )}
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
