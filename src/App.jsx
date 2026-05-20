@@ -593,8 +593,8 @@ export default function App() {
       animation: portfolio-fade-in .45s ease-out both;
     }
     @keyframes portfolio-fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   `;
 
@@ -1259,6 +1259,10 @@ export default function App() {
         </div>
       </footer>
 
+          </div>
+        )}
+      </AnimatePresence>
+
       {selectedImage && (
         <div
           className="fixed inset-0 z-[999] bg-black/90 flex items-center justify-center p-4 sm:p-6"
@@ -1286,9 +1290,6 @@ export default function App() {
           </div>
         </div>
       )}
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
