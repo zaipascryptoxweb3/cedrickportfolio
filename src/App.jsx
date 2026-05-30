@@ -24,6 +24,7 @@ import {
   Award,
   ExternalLink,
   Calendar,
+  Play,
 } from "lucide-react";
 
 const NAV_LINKS = [
@@ -32,6 +33,7 @@ const NAV_LINKS = [
   { label: "About", id: "about" },
   { label: "Services", id: "services" },
   { label: "Portfolio", id: "portfolio" },
+  { label: "Videos", id: "videos" },
   { label: "Experience", id: "experience" },
   { label: "Certifications", id: "certifications" },
   { label: "Contact", id: "contact" },
@@ -213,6 +215,58 @@ const GRAPHIC_DESIGNS = [
   { title: "Overall Champion Poster", image: "/design/Champs.jpg", metric: "High Engagement Visual" },
   { title: "JFINEX Poster", image: "/design/JFINEX1.jpg", metric: "Event Promotion" },
   { title: "Streat Cafe Menu", image: "/design/Streat.jpg", metric: "Improved Ordering Speed" },
+];
+
+const VIDEO_EDITS = [
+  {
+    title: "Francesca Cafe Promo",
+    category: "Reels / TikTok",
+    description: "Short-form cinematic video designed to promote the cafe's new menu and drive local foot traffic.",
+    metric: "High organic reach and local shares",
+    videoSrc: "/video/6.mp4",
+    image: "/video/6-thumbnail.png",
+  },
+  {
+    title: "SF Legends Gameplay",
+    category: "Gaming Montage",
+    description: "Action-packed gameplay montage highlighting the new weapon mechanics and driving player acquisition.",
+    metric: "Boosted player retention & hype",
+    videoSrc: "/video/3.mp4",
+    image: "/video/3-thumbnail.png",
+  },
+  {
+    title: "Francesca Cafe Opening",
+    category: "Promotional Teaser",
+    description: "Exciting countdown and promotional video building anticipation for the grand opening and capturing local interest.",
+    metric: "High engagement & foot traffic intent",
+    videoSrc: "/video/1.mp4",
+    image: "/video/1-thumbnail.png",
+  },
+  {
+    title: "JFINEX Officers Trailer",
+    category: "Event Recap",
+    description: "Fast-paced, high-energy cinematic trailer introducing the new student leadership team and building organization hype.",
+    metric: "High campus-wide shareability",
+    videoSrc: "/video/4.mp4",
+    image: "/video/4-thumbnail.png",
+  },
+  {
+    title: "n8n Automation Explainer",
+    category: "Motion Graphics",
+    description: "Clean, professional explainer video breaking down complex workflow automations for B2B clients.",
+    metric: "Increased client acquisition intent",
+    videoSrc: "/video/5.mp4",
+    image: "/video/5-thumbnail.png",
+  },
+  {
+    title: "Churros Product Teaser", // Updated title
+    category: "Food Cinematography", // Updated category
+    // Wrote a new description focused on the churros
+    description: "Visually rich, mouth-watering b-roll highlighting the golden, crispy texture of the cafe's new signature churros.",
+    metric: "High product awareness & craving intent",
+    videoSrc: "/video/2.mp4",
+    image: "/video/2-thumbnail.png",
+  }
 ];
 
 const SKILL_CATEGORIES = [
@@ -459,6 +513,7 @@ export default function App() {
     return localStorage.getItem("portfolio-theme") || "dark";
   });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -517,18 +572,21 @@ export default function App() {
 
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === "Escape") setSelectedImage(null);
+      if (e.key === "Escape") {
+        setSelectedImage(null);
+        setSelectedVideo(null);
+      }
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = selectedImage ? "hidden" : "";
+    document.body.style.overflow = (selectedImage || selectedVideo) ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [selectedImage]);
+  }, [selectedImage, selectedVideo]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -611,653 +669,717 @@ export default function App() {
           <div key="portfolio-content" className="portfolio-shell">
             <Navbar theme={theme} toggleTheme={toggleTheme} />
 
-      <section
-        id="home"
-        className="pt-32 pb-16 md:pt-48 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20"
-      >
-        <Reveal className="flex-1 space-y-6 text-center md:text-left">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
-            <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              Available for Freelance &amp; Full-time
-            </span>
-          </div>
-
-          <h1 className="text-4xl md:text-6xl md:leading-[1.1] font-serif font-bold text-[var(--text-primary)]">
-            I design visuals, funnels &amp; strategies that{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-blue)] to-blue-400">
-              drive growth.
-            </span>
-          </h1>
-
-          <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto md:mx-0 leading-relaxed">
-            I’m Cedrick, a funnel designer, graphic designer, and social media marketer helping businesses,
-            gaming communities, and personal brands create visuals and systems that attract attention,
-            generate leads, and support real growth.
-          </p>
-
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
-            <button
-              type="button"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[var(--primary-blue)] text-white font-bold rounded-full hover:bg-[var(--primary-blue-dark)] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-blue)]/20"
+            <section
+              id="home"
+              className="pt-32 pb-16 md:pt-48 md:pb-24 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12 md:gap-20"
             >
-              Book a Discovery Call <ChevronRight className="w-4 h-4" />
-            </button>
-            <a
-              href="/cv/SMM_Cedrick_Nuestro.pdf"
-              download
-              className="w-full sm:w-auto px-8 py-3.5 border-2 border-[var(--border-color)] text-[var(--text-primary)] font-bold rounded-full hover:bg-[var(--bg-tertiary)] hover:border-[var(--primary-blue)] transition-all flex items-center justify-center gap-2"
-            >
-              <Download className="w-4 h-4" /> Download CV
-            </a>
-          </div>
-        </Reveal>
+              <Reveal className="flex-1 space-y-6 text-center md:text-left">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-[var(--bg-tertiary)] border border-[var(--border-color)]">
+                  <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    Available for Freelance &amp; Full-time
+                  </span>
+                </div>
 
-        <Reveal className="flex-1 w-full max-w-md relative" delay={0.12}>
-          <button
-            type="button"
-            onClick={() => openImage("/zaipas2.jpg", "Cedrick - Creative Professional")}
-            className="aspect-[4/5] w-full rounded-[2rem] overflow-hidden shadow-2xl relative border border-[var(--border-color)] group cursor-zoom-in block"
-            aria-label="View full photo"
-          >
-            <SafeImg
-              src="/zaipas2.jpg"
-              alt="Cedrick - Creative Professional"
-              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-            />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" /> View Photo
-              </div>
-            </div>
-          </button>
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[var(--primary-blue)]/10 rounded-full blur-2xl -z-10" />
-          <div className="absolute top-10 -right-10 w-24 h-24 bg-[var(--primary-blue)]/20 rounded-full blur-xl -z-10" />
-        </Reveal>
-      </section>
+                <h1 className="text-4xl md:text-6xl md:leading-[1.1] font-serif font-bold text-[var(--text-primary)]">
+                  I design visuals, funnels &amp; strategies that{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-blue)] to-blue-400">
+                    drive growth.
+                  </span>
+                </h1>
 
-      <section id="funnels" className="py-20 md:py-28 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
-              High-Converting Funnels
-            </h2>
-            <p className="text-[var(--text-secondary)] max-w-3xl mx-auto text-lg leading-relaxed">
-              Funnels designed for different industries to generate leads, support conversions, and position brands more professionally online.
-            </p>
-          </Reveal>
+                <p className="text-[var(--text-secondary)] text-lg max-w-xl mx-auto md:mx-0 leading-relaxed">
+                  I’m Cedrick, a funnel designer, graphic designer, and social media marketer helping businesses,
+                  gaming communities, and personal brands create visuals and systems that attract attention,
+                  generate leads, and support real growth.
+                </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {FUNNELS.map((item, index) => (
-              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                <div className="pt-4 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[var(--primary-blue)] text-white font-bold rounded-full hover:bg-[var(--primary-blue-dark)] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[var(--primary-blue)]/20"
+                  >
+                    Book a Discovery Call <ChevronRight className="w-4 h-4" />
+                  </button>
+                  <a
+                    href="/cv/SMM_Cedrick_Nuestro.pdf"
+                    download
+                    className="w-full sm:w-auto px-8 py-3.5 border-2 border-[var(--border-color)] text-[var(--text-primary)] font-bold rounded-full hover:bg-[var(--bg-tertiary)] hover:border-[var(--primary-blue)] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Download className="w-4 h-4" /> Download CV
+                  </a>
+                </div>
+              </Reveal>
+
+              <Reveal className="flex-1 w-full max-w-md relative" delay={0.12}>
                 <button
                   type="button"
-                  onClick={() => openImage(item.image, item.title)}
-                  className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                  aria-label={`View full image of ${item.title}`}
+                  onClick={() => openImage("/zaipas2.jpg", "Cedrick - Creative Professional")}
+                  className="aspect-[4/5] w-full rounded-[2rem] overflow-hidden shadow-2xl relative border border-[var(--border-color)] group cursor-zoom-in block"
+                  aria-label="View full photo"
                 >
-                  <div className="aspect-[4/5] overflow-hidden relative">
-                    <SafeImg
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
-                      <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                  <SafeImg
+                    src="/zaipas2.jpg"
+                    alt="Cedrick - Creative Professional"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4" /> View Photo
                     </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
-                        <ImageIcon className="w-4 h-4" /> View Funnel
+                  </div>
+                </button>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[var(--primary-blue)]/10 rounded-full blur-2xl -z-10" />
+                <div className="absolute top-10 -right-10 w-24 h-24 bg-[var(--primary-blue)]/20 rounded-full blur-xl -z-10" />
+              </Reveal>
+            </section>
+
+            <section id="funnels" className="py-20 md:py-28 bg-[var(--bg-secondary)] border-y border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+                    High-Converting Funnels
+                  </h2>
+                  <p className="text-[var(--text-secondary)] max-w-3xl mx-auto text-lg leading-relaxed">
+                    Funnels designed for different industries to generate leads, support conversions, and position brands more professionally online.
+                  </p>
+                </Reveal>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {FUNNELS.map((item, index) => (
+                    <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                      <button
+                        type="button"
+                        onClick={() => openImage(item.image, item.title)}
+                        className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-primary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                        aria-label={`View full image of ${item.title}`}
+                      >
+                        <div className="aspect-[4/5] overflow-hidden relative">
+                          <SafeImg
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
+                            <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                          </div>
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4" /> View Funnel
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                            {item.title}
+                          </h3>
+                          <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
+                          <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                            <TrendingUp className="w-4 h-4 text-green-500" />
+                            <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                          </div>
+                        </div>
+                      </button>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <div className="border-y border-[var(--border-color)] bg-[var(--bg-primary)] py-8">
+              <div className="max-w-7xl mx-auto px-6 text-center">
+                <Reveal className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
+                  Trusted by organisations &amp; brands
+                </Reveal>
+                <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
+                  {dynamicLogos.map(({ src, alt, label }, index) => (
+                    <Reveal key={label} delay={(index % 5) * 0.05}>
+                      <div className="flex flex-col items-center gap-3 group opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 cursor-default">
+                        <SafeImg src={src} alt={alt} className="h-12 md:h-14 w-auto object-contain" />
+                        <span className="font-serif font-bold text-sm text-[var(--text-primary)] tracking-wide">{label}</span>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <section id="about" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                  <Reveal>
+                    <h2 className="text-3xl md:text-5xl font-serif font-bold mb-6 text-[var(--text-primary)]">
+                      The perfect blend of <span className="text-[var(--primary-blue)]">Creative</span> &amp;{" "}
+                      <span className="text-[var(--primary-blue)]">Business.</span>
+                    </h2>
+                    <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
+                      My background in Financial Management gives me a practical edge. I don’t just make things look good —
+                      I design with business goals, audience attention, and conversion in mind.
+                    </p>
+                    <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
+                      Whether you need a brand refresh, a lead generation funnel, or dependable creative support, I bring
+                      structure, speed, and visual consistency to every project.
+                    </p>
+                    <div className="flex gap-4 flex-wrap sm:flex-nowrap">
+                      {[["4+", "Years Experience"], ["50+", "Projects Delivered"]].map(([num, label]) => (
+                        <div
+                          key={label}
+                          className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex-1 text-center min-w-[150px]"
+                        >
+                          <p className="text-3xl font-bold text-[var(--primary-blue)] mb-1">{num}</p>
+                          <p className="text-xs font-medium text-[var(--text-secondary)] uppercase">{label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </Reveal>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <Reveal className="flex" delay={0.08}>
+                      <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
+                        <Layout className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
+                        <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Funnel Design</h3>
+                        <p className="text-[var(--text-secondary)] text-sm">
+                          Landing pages and conversion-focused funnel visuals built to generate more leads.
+                        </p>
+                      </div>
+                    </Reveal>
+                    <Reveal className="flex" delay={0.16}>
+                      <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
+                        <BarChart3 className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
+                        <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">ROI Focused</h3>
+                        <p className="text-[var(--text-secondary)] text-sm">
+                          Every design choice supports visibility, engagement, and business growth.
+                        </p>
+                      </div>
+                    </Reveal>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="services" className="py-20 md:py-32 bg-[var(--bg-primary)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">How I can help you</h2>
+                  <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
+                    Comprehensive creative and digital support tailored to help your brand grow.
+                  </p>
+                </Reveal>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {SERVICES.map((service, index) => {
+                    const Icon = service.icon;
+                    return (
+                      <Reveal key={service.title} className="flex" delay={index * 0.08}>
+                        <div className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col">
+                          <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
+                            <Icon className="w-6 h-6" />
+                          </div>
+                          <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
+                          <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
+                          <ul className="mt-auto space-y-3">
+                            {service.items.map((item) => (
+                              <li key={item} className="flex items-start text-[var(--text-secondary)]">
+                                <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
+                                <span className="text-sm font-medium">{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Reveal>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+
+            <section id="portfolio" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="mb-12">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Selected Work</h2>
+                  <p className="text-[var(--text-secondary)] max-w-xl text-lg">
+                    A showcase of visual solutions designed to capture attention and deliver results.
+                  </p>
+                </Reveal>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {PORTFOLIO.map((item, index) => (
+                    <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                      <button
+                        type="button"
+                        onClick={() => openImage(item.image, item.title)}
+                        className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                        aria-label={`View full image of ${item.title}`}
+                      >
+                        <div className="aspect-[4/3] overflow-hidden relative">
+                          <SafeImg
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
+                            <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
+                          </div>
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4" /> View Full Photo
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                            {item.title}
+                          </h3>
+                          <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
+                          <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                            <TrendingUp className="w-4 h-4 text-green-500" />
+                            <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
+                          </div>
+                        </div>
+                      </button>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section id="graphic-design" className="py-20 md:py-32 bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="text-center mb-16">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Portrait Design</h2>
+                  <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">High-impact vertical layouts and event posters.</p>
+                </Reveal>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                  {GRAPHIC_DESIGNS.map((item, index) => (
+                    <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                      <button
+                        type="button"
+                        onClick={() => openImage(item.image, item.title)}
+                        className="group relative w-full rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
+                        aria-label={`View full image of ${item.title}`}
+                      >
+                        <div className="aspect-[1/1.414] overflow-hidden relative">
+                          <SafeImg
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2">{item.title}</h3>
+                            <div className="flex items-center gap-2">
+                              <TrendingUp className="w-4 h-4 text-green-500" />
+                              <span className="text-xs font-medium text-slate-200">{item.metric}</span>
+                            </div>
+                          </div>
+                          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4" /> Full View
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section id="videos" className="py-20 md:py-32 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="mb-12">
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Video Editing</h2>
+                  <p className="text-[var(--text-secondary)] max-w-xl text-lg">
+                    Dynamic motion graphics, short-form content, and promotional videos designed for engagement and conversion.
+                  </p>
+                </Reveal>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {VIDEO_EDITS.map((item, index) => (
+                    <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedVideo(item)}
+                        className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-pointer text-left"
+                        aria-label={`Watch ${item.title}`}
+                      >
+                        <div className="aspect-video overflow-hidden relative bg-[var(--bg-primary)]">
+
+                          {/* UPDATED: Changed from SafeImg to a proper video tag to handle .mp4 files */}
+                          <video
+                            src={item.videoSrc}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                          />
+
+                          <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)] z-10">
+                            <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">
+                              {item.category}
+                            </span>
+                          </div>
+
+                          <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none bg-black/10 group-hover:bg-black/30 transition-colors duration-300">
+                            <div className="w-14 h-14 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 group-hover:bg-[var(--primary-blue)] group-hover:scale-110 transition-all duration-300 shadow-lg">
+                              <Play className="w-6 h-6 text-white ml-1" fill="currentColor" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
+                            {item.title}
+                          </h3>
+                          <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">
+                            {item.description}
+                          </p>
+                          <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
+                            <TrendingUp className="w-4 h-4 text-green-500" />
+                            <span className="text-xs font-medium text-[var(--text-primary)]">
+                              {item.metric}
+                            </span>
+                          </div>
+                        </div>
+                      </button>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section id="experience" className="py-20 md:py-32 bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <Reveal>
+                  <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
+                    <Briefcase className="text-[var(--primary-blue)]" /> Professional Journey
+                  </h2>
+                  <div className="space-y-10 mb-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[var(--primary-blue)] before:to-transparent">
+                    <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--primary-blue)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md" />
+                      <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] hover-card">
+                        <div className="text-[var(--primary-blue)] font-bold text-sm mb-1 uppercase tracking-wider">2021 – Present</div>
+                        <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Freelance Funnel Designer, Graphic Designer &amp; SMM</h3>
+                        <div className="text-[var(--text-secondary)] text-sm space-y-2 mt-3">
+                          <p>• Built brand identities, landing page concepts, and campaigns for cafés, student organizations, gaming communities, and lead generation use cases.</p>
+                          <p>• Managed end-to-end design deliverables with consistent turnaround and client communication.</p>
+                          <p>• Turned abstract client ideas into clear visuals, funnel structures, and practical content strategies.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--text-tertiary)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2" />
+                      <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-tertiary)] p-6 rounded-2xl border border-[var(--border-color)]">
+                        <div className="text-[var(--text-tertiary)] font-bold text-sm mb-1 uppercase tracking-wider">June – Oct 2021</div>
+                        <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Layout Artist</h3>
+                        <p className="text-[var(--text-primary)] font-medium text-sm mb-2">One Stop Shop</p>
+                        <p className="text-[var(--text-secondary)] text-sm">
+                          Prepared commercial print files and improved layout workflows for smooth production output.
+                        </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
-                    <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                      <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
-                    </div>
-                  </div>
-                </button>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="border-y border-[var(--border-color)] bg-[var(--bg-primary)] py-8">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <Reveal className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-8">
-            Trusted by organisations &amp; brands
-          </Reveal>
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-20">
-            {dynamicLogos.map(({ src, alt, label }, index) => (
-              <Reveal key={label} delay={(index % 5) * 0.05}>
-                <div className="flex flex-col items-center gap-3 group opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300 cursor-default">
-                  <SafeImg src={src} alt={alt} className="h-12 md:h-14 w-auto object-contain" />
-                  <span className="font-serif font-bold text-sm text-[var(--text-primary)] tracking-wide">{label}</span>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <section id="about" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <Reveal>
-              <h2 className="text-3xl md:text-5xl font-serif font-bold mb-6 text-[var(--text-primary)]">
-                The perfect blend of <span className="text-[var(--primary-blue)]">Creative</span> &amp;{" "}
-                <span className="text-[var(--primary-blue)]">Business.</span>
-              </h2>
-              <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
-                My background in Financial Management gives me a practical edge. I don’t just make things look good —
-                I design with business goals, audience attention, and conversion in mind.
-              </p>
-              <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-8">
-                Whether you need a brand refresh, a lead generation funnel, or dependable creative support, I bring
-                structure, speed, and visual consistency to every project.
-              </p>
-              <div className="flex gap-4 flex-wrap sm:flex-nowrap">
-                {[["4+", "Years Experience"], ["50+", "Projects Delivered"]].map(([num, label]) => (
-                  <div
-                    key={label}
-                    className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex-1 text-center min-w-[150px]"
-                  >
-                    <p className="text-3xl font-bold text-[var(--primary-blue)] mb-1">{num}</p>
-                    <p className="text-xs font-medium text-[var(--text-secondary)] uppercase">{label}</p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <Reveal className="flex" delay={0.08}>
-                <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card">
-                  <Layout className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
-                  <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">Funnel Design</h3>
-                  <p className="text-[var(--text-secondary)] text-sm">
-                    Landing pages and conversion-focused funnel visuals built to generate more leads.
-                  </p>
-                </div>
-              </Reveal>
-              <Reveal className="flex" delay={0.16}>
-                <div className="w-full bg-[var(--bg-secondary)] p-8 rounded-2xl border border-[var(--border-color)] hover-card transition-all duration-300 sm:translate-y-8">
-                  <BarChart3 className="w-10 h-10 text-[var(--primary-blue)] mb-4" />
-                  <h3 className="text-xl font-bold mb-2 text-[var(--text-primary)]">ROI Focused</h3>
-                  <p className="text-[var(--text-secondary)] text-sm">
-                    Every design choice supports visibility, engagement, and business growth.
-                  </p>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="services" className="py-20 md:py-32 bg-[var(--bg-primary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">How I can help you</h2>
-            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">
-              Comprehensive creative and digital support tailored to help your brand grow.
-            </p>
-          </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {SERVICES.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <Reveal key={service.title} className="flex" delay={index * 0.08}>
-                  <div className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col">
-                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-[var(--primary-blue)] mb-6">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-3 text-[var(--text-primary)]">{service.title}</h3>
-                    <p className="text-[var(--text-secondary)] mb-6 text-sm">{service.description}</p>
-                    <ul className="mt-auto space-y-3">
-                      {service.items.map((item) => (
-                        <li key={item} className="flex items-start text-[var(--text-secondary)]">
-                          <CheckCircle2 className="w-5 h-5 text-[var(--primary-blue)] mr-3 shrink-0 mt-0.5" />
-                          <span className="text-sm font-medium">{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
+                    <Users className="text-[var(--primary-blue)]" /> Education
+                  </h2>
+                  <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)]">
+                    <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Expected Graduation: June 2026</span>
+                    <h3 className="text-xl font-bold mt-2 text-[var(--text-primary)]">BS in Business Administration</h3>
+                    <p className="text-[var(--text-secondary)] font-medium mb-2">
+                      PHINMA Araullo University — Major in Financial Management
+                    </p>
                   </div>
                 </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
-      <section id="portfolio" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal className="mb-12">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Selected Work</h2>
-            <p className="text-[var(--text-secondary)] max-w-xl text-lg">
-              A showcase of visual solutions designed to capture attention and deliver results.
-            </p>
-          </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PORTFOLIO.map((item, index) => (
-              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
-                <button
-                  type="button"
-                  onClick={() => openImage(item.image, item.title)}
-                  className="group flex w-full flex-col rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                  aria-label={`View full image of ${item.title}`}
-                >
-                  <div className="aspect-[4/3] overflow-hidden relative">
-                    <SafeImg
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 left-4 bg-[var(--bg-primary)]/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
-                      <span className="text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider">{item.category}</span>
-                    </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-white text-sm font-semibold flex items-center gap-2">
-                        <ImageIcon className="w-4 h-4" /> View Full Photo
+                <Reveal delay={0.08}>
+                  <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)]">Value Proposition</h2>
+                  <div className="space-y-8 mb-12">
+                    {SKILL_CATEGORIES.map((category) => (
+                      <div key={category.name}>
+                        <h3 className="text-sm font-bold mb-4 uppercase tracking-wider text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
+                          {category.name}
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {category.skills.map((skill) => (
+                            <span
+                              key={skill}
+                              className="px-4 py-2 bg-[var(--primary-blue)]/5 border border-[var(--primary-blue)]/20 rounded-lg text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--primary-blue)]/10 transition-colors"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2 group-hover:text-[var(--primary-blue)] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="text-[var(--text-secondary)] text-sm mb-4 flex-1">{item.description}</p>
-                    <div className="flex items-center gap-2 pt-4 border-t border-[var(--border-color)] mt-auto">
-                      <TrendingUp className="w-4 h-4 text-green-500" />
-                      <span className="text-xs font-medium text-[var(--text-primary)]">{item.metric}</span>
-                    </div>
-                  </div>
-                </button>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="graphic-design" className="py-20 md:py-32 bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">Portrait Design</h2>
-            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg">High-impact vertical layouts and event posters.</p>
-          </Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {GRAPHIC_DESIGNS.map((item, index) => (
-              <Reveal key={item.title} className="flex" delay={(index % 3) * 0.08}>
-                <button
-                  type="button"
-                  onClick={() => openImage(item.image, item.title)}
-                  className="group relative w-full rounded-2xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] hover-card cursor-zoom-in text-left"
-                  aria-label={`View full image of ${item.title}`}
-                >
-                  <div className="aspect-[1/1.414] overflow-hidden relative">
-                    <SafeImg
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                      <h3 className="text-[var(--text-primary)] text-xl font-bold mb-2">{item.title}</h3>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-green-500" />
-                        <span className="text-xs font-medium text-slate-200">{item.metric}</span>
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center gap-2">
-                        <ImageIcon className="w-4 h-4" /> Full View
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="experience" className="py-20 md:py-32 bg-[var(--bg-primary)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <Reveal>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
-              <Briefcase className="text-[var(--primary-blue)]" /> Professional Journey
-            </h2>
-            <div className="space-y-10 mb-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[var(--primary-blue)] before:to-transparent">
-              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--primary-blue)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md" />
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)] hover-card">
-                  <div className="text-[var(--primary-blue)] font-bold text-sm mb-1 uppercase tracking-wider">2021 – Present</div>
-                  <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Freelance Funnel Designer, Graphic Designer &amp; SMM</h3>
-                  <div className="text-[var(--text-secondary)] text-sm space-y-2 mt-3">
-                    <p>• Built brand identities, landing page concepts, and campaigns for cafés, student organizations, gaming communities, and lead generation use cases.</p>
-                    <p>• Managed end-to-end design deliverables with consistent turnaround and client communication.</p>
-                    <p>• Turned abstract client ideas into clear visuals, funnel structures, and practical content strategies.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-[var(--bg-primary)] bg-[var(--text-tertiary)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2" />
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-[var(--bg-tertiary)] p-6 rounded-2xl border border-[var(--border-color)]">
-                  <div className="text-[var(--text-tertiary)] font-bold text-sm mb-1 uppercase tracking-wider">June – Oct 2021</div>
-                  <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">Layout Artist</h3>
-                  <p className="text-[var(--text-primary)] font-medium text-sm mb-2">One Stop Shop</p>
-                  <p className="text-[var(--text-secondary)] text-sm">
-                    Prepared commercial print files and improved layout workflows for smooth production output.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)] flex items-center gap-3">
-              <Users className="text-[var(--primary-blue)]" /> Education
-            </h2>
-            <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)]">
-              <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Expected Graduation: June 2026</span>
-              <h3 className="text-xl font-bold mt-2 text-[var(--text-primary)]">BS in Business Administration</h3>
-              <p className="text-[var(--text-secondary)] font-medium mb-2">
-                PHINMA Araullo University — Major in Financial Management
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-10 text-[var(--text-primary)]">Value Proposition</h2>
-            <div className="space-y-8 mb-12">
-              {SKILL_CATEGORIES.map((category) => (
-                <div key={category.name}>
-                  <h3 className="text-sm font-bold mb-4 uppercase tracking-wider text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
-                    {category.name}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {category.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-4 py-2 bg-[var(--primary-blue)]/5 border border-[var(--primary-blue)]/20 rounded-lg text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--primary-blue)]/10 transition-colors"
-                      >
-                        {skill}
-                      </span>
                     ))}
                   </div>
-                </div>
-              ))}
-            </div>
 
-            <div>
-              <h3 className="text-sm font-bold mb-4 uppercase tracking-wider text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
-                Tech Stack &amp; Tools
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {dynamicTools.map((tool) => (
-                  <div
-                    key={tool.name}
-                    className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl hover:border-[var(--primary-blue)]/50 transition-colors"
-                  >
-                    <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-[var(--bg-tertiary)] shrink-0">
-                      <SafeImg src={tool.src} alt={tool.name} className="w-5 h-5 object-contain" />
+                  <div>
+                    <h3 className="text-sm font-bold mb-4 uppercase tracking-wider text-[var(--text-secondary)] border-b border-[var(--border-color)] pb-2">
+                      Tech Stack &amp; Tools
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {dynamicTools.map((tool) => (
+                        <div
+                          key={tool.name}
+                          className="flex items-center gap-3 p-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl hover:border-[var(--primary-blue)]/50 transition-colors"
+                        >
+                          <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-[var(--bg-tertiary)] shrink-0">
+                            <SafeImg src={tool.src} alt={tool.name} className="w-5 h-5 object-contain" />
+                          </div>
+                          <span className="text-xs font-bold text-[var(--text-primary)] truncate">{tool.name}</span>
+                        </div>
+                      ))}
                     </div>
-                    <span className="text-xs font-bold text-[var(--text-primary)] truncate">{tool.name}</span>
                   </div>
-                ))}
+                </Reveal>
               </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+            </section>
 
-      <section id="certifications" className="py-20 md:py-32 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <Reveal className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] mb-6">
-              <Award className="w-4 h-4 text-[var(--primary-blue)]" />
-              <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase">Verified Credentials</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
-              Certifications & Training
-            </h2>
-            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
-              Continuous learning backed by industry-recognized certifications from leading platforms.
-            </p>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {CERTIFICATIONS.map((cert, index) => (
-              <Reveal key={cert.title} className="flex" delay={index * 0.08}>
-                <div className="group w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
-
-                  <div className="flex items-start gap-4 mb-4 relative z-10">
-                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
-                      {cert.badge}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
-                        {cert.title}
-                      </h3>
-                      <p className="text-sm font-semibold text-[var(--primary-blue)]">{cert.issuer}</p>
-                    </div>
+            <section id="certifications" className="py-20 md:py-32 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12">
+                <Reveal className="text-center mb-16">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-secondary)] border border-[var(--border-color)] mb-6">
+                    <Award className="w-4 h-4 text-[var(--primary-blue)]" />
+                    <span className="text-[var(--primary-blue)] font-bold text-xs tracking-wider uppercase">Verified Credentials</span>
                   </div>
-
-                  <p className="text-[var(--text-secondary)] text-sm mb-5 flex-1 relative z-10 leading-relaxed">
-                    {cert.description}
+                  <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+                    Certifications & Training
+                  </h2>
+                  <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-lg leading-relaxed">
+                    Continuous learning backed by industry-recognized certifications from leading platforms.
                   </p>
+                </Reveal>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)] relative z-10">
-                    <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
-                      <Calendar className="w-4 h-4" />
-                      <span className="text-xs font-bold uppercase tracking-wider">{cert.date}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {CERTIFICATIONS.map((cert, index) => (
+                    <Reveal key={cert.title} className="flex" delay={index * 0.08}>
+                      <div className="group w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl p-8 hover-card flex flex-col relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
+
+                        <div className="flex items-start gap-4 mb-4 relative z-10">
+                          <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
+                            {cert.badge}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
+                              {cert.title}
+                            </h3>
+                            <p className="text-sm font-semibold text-[var(--primary-blue)]">{cert.issuer}</p>
+                          </div>
+                        </div>
+
+                        <p className="text-[var(--text-secondary)] text-sm mb-5 flex-1 relative z-10 leading-relaxed">
+                          {cert.description}
+                        </p>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)] relative z-10">
+                          <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
+                            <Calendar className="w-4 h-4" />
+                            <span className="text-xs font-bold uppercase tracking-wider">{cert.date}</span>
+                          </div>
+                          {cert.credential && (
+                            <a
+                              href={cert.credential}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary-blue)] hover:underline uppercase tracking-wider"
+                            >
+                              Verify <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section id="contact" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
+              <Reveal className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
+                <div
+                  className="flex-1 p-10 md:p-16 flex flex-col justify-between relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))" }}
+                >
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary-blue)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+                  <div className="relative z-10">
+                    <span className="inline-block py-1 px-3 rounded-full bg-[var(--primary-blue)]/10 border border-[var(--primary-blue)]/20 text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider mb-6">
+                      Currently Accepting Projects
+                    </span>
+
+                    <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
+                      Let&apos;s build something great.
+                    </h2>
+
+                    <p className="text-[var(--text-secondary)] mb-12 text-lg">
+                      Whether you need a funnel, social media support, or reliable creative execution, I’m ready to help you grow.
+                    </p>
+
+                    <div className="space-y-8">
+                      {[
+                        {
+                          icon: <Mail className="w-6 h-6" />,
+                          label: "Drop me an email",
+                          value: "nuestrocedrick@gmail.com",
+                          href: "mailto:nuestrocedrick@gmail.com",
+                        },
+                        {
+                          icon: <Phone className="w-6 h-6" />,
+                          label: "Call or WhatsApp",
+                          value: "+63 965 634 8665",
+                          href: "tel:+639656348665",
+                        },
+                      ].map(({ icon, label, value, href }) => (
+                        <div key={href} className="flex items-center gap-5 group cursor-pointer">
+                          <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-2xl flex items-center justify-center text-[var(--primary-blue)] backdrop-blur-sm group-hover:bg-[var(--primary-blue)] group-hover:text-white transition-colors">
+                            {icon}
+                          </div>
+                          <div>
+                            <p className="text-sm text-[var(--text-secondary)] mb-1">{label}</p>
+                            <a href={href} className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-blue)] transition-colors">
+                              {value}
+                            </a>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    {cert.credential && (
-                      <a
-                        href={cert.credential}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-bold text-[var(--primary-blue)] hover:underline uppercase tracking-wider"
-                      >
-                        Verify <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    )}
                   </div>
+                </div>
+
+                <div className="flex-1 p-10 md:p-16 bg-[var(--bg-secondary)]">
+                  <h3 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Send a Proposal</h3>
+                  <p className="text-[var(--text-secondary)] mb-8 text-sm">
+                    Fill out the form below and I’ll get back to you within 24 hours.
+                  </p>
+                  <form onSubmit={handleFormSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                          Your Name
+                        </label>
+                        <input
+                          id="name"
+                          name="name"
+                          required
+                          type="text"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="John Doe"
+                          className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          id="email"
+                          name="email"
+                          required
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="john@company.com"
+                          className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="service" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                        What do you need help with?
+                      </label>
+                      <select
+                        id="service"
+                        name="service"
+                        value={formData.service}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all appearance-none"
+                      >
+                        {[
+                          "Funnel Design",
+                          "Graphic Design",
+                          "Social Media Management",
+                          "Virtual Assistant Services",
+                          "Other",
+                        ].map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="details" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                        Project Details
+                      </label>
+                      <textarea
+                        id="details"
+                        name="details"
+                        required
+                        rows="4"
+                        value={formData.details}
+                        onChange={handleChange}
+                        placeholder="Tell me about your brand and what you are looking to achieve..."
+                        className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all resize-none"
+                      />
+                    </div>
+
+                    {formStatus === "success" && (
+                      <div className="p-4 bg-green-500/10 border border-green-500/50 text-green-500 rounded-xl text-sm font-bold flex items-center gap-2">
+                        <CheckCircle2 className="w-5 h-5" /> Message sent! I’ll review this shortly.
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="w-full py-4 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-xl hover:bg-[var(--primary-blue)] hover:text-white transition-all duration-300 flex justify-center items-center gap-2 mt-4"
+                    >
+                      Submit Inquiry <Send className="w-4 h-4" />
+                    </button>
+                  </form>
                 </div>
               </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+            </section>
 
-      <section id="contact" className="py-20 md:py-32 bg-[var(--bg-tertiary)]">
-        <Reveal className="max-w-7xl mx-auto px-6 md:px-12 bg-[var(--bg-secondary)] rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[var(--border-color)] relative">
-          <div
-            className="flex-1 p-10 md:p-16 flex flex-col justify-between relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, var(--gradient-start), var(--gradient-end))" }}
-          >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--primary-blue)]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-
-            <div className="relative z-10">
-              <span className="inline-block py-1 px-3 rounded-full bg-[var(--primary-blue)]/10 border border-[var(--primary-blue)]/20 text-[var(--primary-blue)] text-xs font-bold uppercase tracking-wider mb-6">
-                Currently Accepting Projects
-              </span>
-
-              <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-[var(--text-primary)]">
-                Let&apos;s build something great.
-              </h2>
-
-              <p className="text-[var(--text-secondary)] mb-12 text-lg">
-                Whether you need a funnel, social media support, or reliable creative execution, I’m ready to help you grow.
-              </p>
-
-              <div className="space-y-8">
-                {[
-                  {
-                    icon: <Mail className="w-6 h-6" />,
-                    label: "Drop me an email",
-                    value: "nuestrocedrick@gmail.com",
-                    href: "mailto:nuestrocedrick@gmail.com",
-                  },
-                  {
-                    icon: <Phone className="w-6 h-6" />,
-                    label: "Call or WhatsApp",
-                    value: "+63 965 634 8665",
-                    href: "tel:+639656348665",
-                  },
-                ].map(({ icon, label, value, href }) => (
-                  <div key={href} className="flex items-center gap-5 group cursor-pointer">
-                    <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-2xl flex items-center justify-center text-[var(--primary-blue)] backdrop-blur-sm group-hover:bg-[var(--primary-blue)] group-hover:text-white transition-colors">
-                      {icon}
-                    </div>
-                    <div>
-                      <p className="text-sm text-[var(--text-secondary)] mb-1">{label}</p>
-                      <a href={href} className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--primary-blue)] transition-colors">
-                        {value}
-                      </a>
-                    </div>
+            <footer className="bg-[var(--bg-primary)] py-12 border-t border-[var(--border-color)]">
+              <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="text-center md:text-left">
+                  <div className="text-2xl font-serif font-bold text-[var(--text-primary)] mb-1">
+                    Cedrick<span className="text-[var(--primary-blue)]">.</span>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1 p-10 md:p-16 bg-[var(--bg-secondary)]">
-            <h3 className="text-2xl font-bold mb-2 text-[var(--text-primary)]">Send a Proposal</h3>
-            <p className="text-[var(--text-secondary)] mb-8 text-sm">
-              Fill out the form below and I’ll get back to you within 24 hours.
-            </p>
-            <form onSubmit={handleFormSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    required
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
-                  />
+                  <p className="text-[var(--text-secondary)] text-sm">Strategic Design, Funnels &amp; Digital Management</p>
                 </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    required
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@company.com"
-                    className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="service" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                  What do you need help with?
-                </label>
-                <select
-                  id="service"
-                  name="service"
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all appearance-none"
-                >
+                <div className="flex gap-4">
                   {[
-                    "Funnel Design",
-                    "Graphic Design",
-                    "Social Media Management",
-                    "Virtual Assistant Services",
-                    "Other",
-                  ].map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
+                    { href: "mailto:nuestrocedrick@gmail.com", icon: <Mail className="w-5 h-5" />, label: "Email" },
+                    { href: "https://www.linkedin.com/in/cedricknuestro/", icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
+                    { href: "https://v2.onlinejobs.ph/jobseekers/info/4579627", icon: <Globe className="w-5 h-5" />, label: "OLJ" },
+                  ].map(({ href, icon, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      aria-label={label}
+                      target={href.startsWith("mailto") ? undefined : "_blank"}
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[var(--primary-blue)] hover:border-[var(--primary-blue)] transition-all"
+                    >
+                      {icon}
+                    </a>
                   ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="details" className="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
-                  Project Details
-                </label>
-                <textarea
-                  id="details"
-                  name="details"
-                  required
-                  rows="4"
-                  value={formData.details}
-                  onChange={handleChange}
-                  placeholder="Tell me about your brand and what you are looking to achieve..."
-                  className="w-full px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] rounded-xl focus:outline-none focus:border-[var(--primary-blue)] focus:ring-1 focus:ring-[var(--primary-blue)] transition-all resize-none"
-                />
-              </div>
-
-              {formStatus === "success" && (
-                <div className="p-4 bg-green-500/10 border border-green-500/50 text-green-500 rounded-xl text-sm font-bold flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5" /> Message sent! I’ll review this shortly.
                 </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-xl hover:bg-[var(--primary-blue)] hover:text-white transition-all duration-300 flex justify-center items-center gap-2 mt-4"
-              >
-                Submit Inquiry <Send className="w-4 h-4" />
-              </button>
-            </form>
-          </div>
-        </Reveal>
-      </section>
-
-      <footer className="bg-[var(--bg-primary)] py-12 border-t border-[var(--border-color)]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
-            <div className="text-2xl font-serif font-bold text-[var(--text-primary)] mb-1">
-              Cedrick<span className="text-[var(--primary-blue)]">.</span>
-            </div>
-            <p className="text-[var(--text-secondary)] text-sm">Strategic Design, Funnels &amp; Digital Management</p>
-          </div>
-          <div className="flex gap-4">
-            {[
-              { href: "mailto:nuestrocedrick@gmail.com", icon: <Mail className="w-5 h-5" />, label: "Email" },
-              { href: "https://www.linkedin.com/in/cedricknuestro/", icon: <Linkedin className="w-5 h-5" />, label: "LinkedIn" },
-              { href: "https://v2.onlinejobs.ph/jobseekers/info/4579627", icon: <Globe className="w-5 h-5" />, label: "OLJ" },
-            ].map(({ href, icon, label }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                target={href.startsWith("mailto") ? undefined : "_blank"}
-                rel="noopener noreferrer"
-                className="w-12 h-12 rounded-full border border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-secondary)] hover:text-white hover:bg-[var(--primary-blue)] hover:border-[var(--primary-blue)] transition-all"
-              >
-                {icon}
-              </a>
-            ))}
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-6 md:px-12 mt-8 pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">
-          <p>© {new Date().getFullYear()} Cedrick Nuestro.</p>
-          <p>Available for global remote work.</p>
-        </div>
-      </footer>
+              </div>
+              <div className="max-w-7xl mx-auto px-6 md:px-12 mt-8 pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-[var(--text-tertiary)] uppercase tracking-wider">
+                <p>© {new Date().getFullYear()} Cedrick Nuestro.</p>
+                <p>Available for global remote work.</p>
+              </div>
+            </footer>
 
           </div>
         )}
@@ -1287,6 +1409,42 @@ export default function App() {
               alt={selectedImage.alt}
               className="max-w-[95vw] max-h-[90vh] object-contain rounded-xl shadow-2xl"
             />
+          </div>
+        </div>
+      )}
+
+      {selectedVideo && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setSelectedVideo(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="relative flex flex-col items-center justify-center w-full max-w-4xl bg-[var(--bg-secondary)] rounded-xl overflow-hidden shadow-2xl border border-[var(--border-color)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setSelectedVideo(null)}
+              className="absolute top-3 right-3 z-[1001] text-white bg-black/50 hover:bg-black/70 rounded-full p-3 transition-colors"
+              aria-label="Close video preview"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="w-full bg-black">
+              <iframe
+                src={selectedVideo.videoSrc}
+                className="w-full h-[70vh] md:h-[80vh] object-contain rounded-2xl"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                frameBorder="0"
+              />
+            </div>
+            <div className="w-full p-6 text-left">
+              <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">{selectedVideo.title}</h3>
+              <p className="text-sm text-[var(--text-secondary)]">{selectedVideo.description}</p>
+            </div>
           </div>
         </div>
       )}
