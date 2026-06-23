@@ -259,9 +259,8 @@ const VIDEO_EDITS = [
     image: "/video/5-thumbnail.png",
   },
   {
-    title: "Churros Product Teaser", // Updated title
-    category: "Food Cinematography", // Updated category
-    // Wrote a new description focused on the churros
+    title: "Churros Product Teaser",
+    category: "Food Cinematography",
     description: "Visually rich, mouth-watering b-roll highlighting the golden, crispy texture of the cafe's new signature churros.",
     metric: "High product awareness & craving intent",
     videoSrc: "/video/2.mp4",
@@ -552,7 +551,7 @@ export default function App() {
   const dynamicTools = useMemo(
     () => [
       { name: "Adobe Photoshop", src: "/tech-icons/photoshop.png" },
-      { name: "Canva Pro", src: "/tech-icons/canva.png" },
+      { name: "Canva", src: "/tech-icons/canva.png" },
       { name: "CapCut", src: "/tech-icons/capcut.png" },
       { name: "Meta Business", src: "/tech-icons/meta.png" },
       { name: "Google Workspace", src: "/tech-icons/googlew.png" },
@@ -560,7 +559,7 @@ export default function App() {
       { name: "Notion", src: "/tech-icons/notion.png" },
       { name: "Slack", src: "/tech-icons/slack.jpg" },
       { name: "n8n (Automation)", src: "/tech-icons/n8n.png" },
-      { name: "ChatGPT / AI", src: "/tech-icons/chatgpt.png" },
+      { name: "ChatGPT", src: "/tech-icons/chatgpt.png" },
       { name: "Gemini", src: "/tech-icons/gemini.png" },
       { name: "Claude", src: "/tech-icons/claude.png" },
       { name: "Grammarly", src: "/tech-icons/gram.png" },
@@ -1086,7 +1085,7 @@ export default function App() {
                     <Users className="text-[var(--primary-blue)]" /> Education
                   </h2>
                   <div className="bg-[var(--bg-secondary)] p-6 rounded-2xl border border-[var(--border-color)]">
-                    <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Expected Graduation: June 2026</span>
+                    <span className="text-sm font-bold text-[var(--primary-blue)] uppercase tracking-wider">Graduated: June 2026</span>
                     <h3 className="text-xl font-bold mt-2 text-[var(--text-primary)]">BS in Business Administration</h3>
                     <p className="text-[var(--text-secondary)] font-medium mb-2">
                       PHINMA Araullo University — Major in Financial Management
