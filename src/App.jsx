@@ -302,6 +302,26 @@ const CERTIFICATIONS = [
       "Certified in applying inbound social media strategy including social monitoring, content strategy, social engagement, creating social media policies, and demonstrating social ROI to stakeholders.",
     badge: "🏅",
   },
+  {
+    title: "Intuit QuickBooks Certification Level 1",
+    issuer: "Intuit",
+    date: "July 04, 2026 - July 04, 2027",
+    credential: "https://www.credly.com/badges/f7b0bdbe-a09f-4eb4-b6a4-975706731f65/public_url",
+    description:
+      "Awarded for passing the Intuit QuickBooks Certification Level 1 exam, demonstrating proficiency in the QuickBooks platform as a Certified ProAdvisor.",
+    badge: "📊",
+    badgeImg: "https://images.credly.com/images/a830f195-ffbb-4789-a1ee-f58c07825a53/linkedin_thumb_blob",
+  },
+  {
+    title: "Intuit QuickBooks Certification Level 2",
+    issuer: "Intuit",
+    date: "July 04, 2026 - July 04, 2027",
+    credential: "https://www.credly.com/badges/afc40a42-9e97-4de4-b061-cb70a9fec134/public_url",
+    description:
+      "Awarded for passing the Intuit QuickBooks Certification Level 2 exam, demonstrating advanced proficiency in the QuickBooks platform as a Certified ProAdvisor.",
+    badge: "📊",
+    badgeImg: "https://images.credly.com/images/f98806e7-c3cb-4c50-b3d8-02d12785e783/linkedin_thumb_blob",
+  },
 ];
 
 function SafeImg({ src, alt, className }) {
@@ -1159,8 +1179,16 @@ export default function App() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--primary-blue)]/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[var(--primary-blue)]/10 transition-colors duration-500" />
 
                         <div className="flex items-start gap-4 mb-4 relative z-10">
-                          <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300">
-                            {cert.badge}
+                          <div className="w-14 h-14 bg-[var(--primary-blue)]/10 rounded-xl flex items-center justify-center text-2xl shrink-0 group-hover:bg-[var(--primary-blue)]/20 transition-colors duration-300 overflow-hidden">
+                            {cert.badgeImg ? (
+                              <img
+                                src={cert.badgeImg}
+                                alt={cert.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              cert.badge
+                            )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-bold text-[var(--text-primary)] mb-1 group-hover:text-[var(--primary-blue)] transition-colors duration-300">
