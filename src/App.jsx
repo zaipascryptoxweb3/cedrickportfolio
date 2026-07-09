@@ -305,7 +305,7 @@ const CERTIFICATIONS = [
   {
     title: "Intuit QuickBooks Certification Level 1",
     issuer: "Intuit",
-    date: "July 04, 2026 - July 04, 2027",
+    date: "July 2026 - July 2027",
     credential: "https://www.credly.com/badges/f7b0bdbe-a09f-4eb4-b6a4-975706731f65/public_url",
     description:
       "Awarded for passing the Intuit QuickBooks Certification Level 1 exam, demonstrating proficiency in the QuickBooks platform as a Certified ProAdvisor.",
@@ -315,7 +315,7 @@ const CERTIFICATIONS = [
   {
     title: "Intuit QuickBooks Certification Level 2",
     issuer: "Intuit",
-    date: "July 04, 2026 - July 04, 2027",
+    date: "July 2026 - July 2027",
     credential: "https://www.credly.com/badges/afc40a42-9e97-4de4-b061-cb70a9fec134/public_url",
     description:
       "Awarded for passing the Intuit QuickBooks Certification Level 2 exam, demonstrating advanced proficiency in the QuickBooks platform as a Certified ProAdvisor.",
@@ -842,7 +842,7 @@ export default function App() {
                       structure, speed, and visual consistency to every project.
                     </p>
                     <div className="flex gap-4 flex-wrap sm:flex-nowrap">
-                      {[["4+", "Years Experience"], ["50+", "Projects Delivered"]].map(([num, label]) => (
+                      {[["5+", "Years Experience"], ["50+", "Projects Delivered"]].map(([num, label]) => (
                         <div
                           key={label}
                           className="p-4 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-color)] flex-1 text-center min-w-[150px]"
